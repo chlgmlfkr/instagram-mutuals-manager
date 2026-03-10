@@ -1,0 +1,51 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+body {
+  font-family: 'Space Grotesk', system-ui, sans-serif;
+  background:
+    linear-gradient(120deg, rgba(249, 115, 22, 0.12), transparent 36%),
+    radial-gradient(980px 620px at -8% -16%, rgba(251, 146, 60, 0.16), transparent 62%),
+    radial-gradient(920px 560px at 104% -12%, rgba(34, 211, 238, 0.22), transparent 58%),
+    #0a0b10;
+  min-height: 100vh;
+}
+
+@layer components {
+  .glass {
+    @apply border border-white/10 bg-ink-800/70 backdrop-blur shadow-glow;
+    background-image: linear-gradient(
+      150deg,
+      rgba(255, 255, 255, 0.03),
+      rgba(255, 255, 255, 0) 35%
+    );
+  }
+  .btn {
+    @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-lg px-3 py-2.5 text-sm font-semibold transition;
+  }
+  .btn-primary {
+    @apply btn bg-neon-500/80 text-ink-900 hover:bg-neon-400;
+  }
+  .btn-ghost {
+    @apply btn bg-white/5 text-white hover:bg-white/10 border border-white/10;
+  }
+  .chip {
+    @apply rounded-full bg-white/10 px-3 py-1 text-xs text-white/80;
+  }
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

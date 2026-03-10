@@ -1,0 +1,14 @@
+{
+  "data": {
+    "list": [
+      {
+        "nested": {
+          "string_list_data": [
+            { "href": "https://instagram.com/mike" },
+            { "href": "https://instagram.com/oliver" }
+          ]
+        }
+      }
+    ]
+  }
+}

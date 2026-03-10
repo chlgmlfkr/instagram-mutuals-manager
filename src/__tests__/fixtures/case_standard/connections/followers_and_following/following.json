@@ -1,0 +1,6 @@
+[
+  { "string_list_data": [{ "value": "bob" }] },
+  { "string_list_data": [{ "value": "charlie" }] },
+  { "string_list_data": [{ "value": "david" }] },
+  { "string_list_data": [{ "value": "eve" }] }
+]

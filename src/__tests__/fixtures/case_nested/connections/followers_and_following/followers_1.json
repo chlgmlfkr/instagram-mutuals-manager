@@ -1,0 +1,15 @@
+{
+  "meta": { "version": "v2" },
+  "relationships": {
+    "container": [
+      {
+        "group": {
+          "items": [
+            { "string_list_data": [{ "value": "mike" }] },
+            { "string_list_data": [{ "value": "nina" }] }
+          ]
+        }
+      }
+    ]
+  }
+}
