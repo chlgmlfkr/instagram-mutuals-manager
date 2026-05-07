@@ -38,11 +38,19 @@ async function loadEntriesFromFiles(files: File[]) {
 }
 
 export async function analyzeInstagramExport(
-  zipFile: File,
+  zipFile: File | null,
   folderFiles: File[]
 ): Promise<AnalysisOutput> {
-  const zip = await JSZip.loadAsync(zipFile);
-  const { followersFiles, followingFiles, blockedFiles, restrictedFiles, fileList } = await scanZip(zip);
+  const zip = zipFile ? await JSZip.loadAsync(zipFile) : null;
+  const { followersFiles, followingFiles, blockedFiles, restrictedFiles, fileList } = zip
+    ? await scanZip(zip)
+    : {
+        followersFiles: [],
+        followingFiles: [],
+        blockedFiles: [],
+        restrictedFiles: [],
+        fileList: []
+      };
 
   let followersEntries: unknown[] = [];
   let followingEntries: unknown[] = [];
@@ -102,7 +110,11 @@ export async function analyzeInstagramExport(
     stats: {
       followersCount: uniqueFollowers.length,
       followingCount: uniqueFollowing.length,
-      skipCount: followersResult.skipCount + followingResult.skipCount,
+      skipCount:
+        followersResult.skipCount +
+        followingResult.skipCount +
+        blockedResult.skipCount +
+        restrictedResult.skipCount,
       sourceNote: `${sourceNote} · entries(followers:${followersEntries.length}, following:${followingEntries.length})`,
       usedFollowersFiles,
       usedFollowingFiles,

@@ -12,7 +12,8 @@ function extractFromHref(href: unknown): string | null {
   try {
     const normalizedHref = href.startsWith('http') ? href : `https://${href.replace(/^\/+/, '')}`;
     const url = new URL(normalizedHref);
-    if (!url.hostname.toLowerCase().includes('instagram.com')) return null;
+    const host = url.hostname.toLowerCase();
+    if (!(host === 'instagram.com' || host.endsWith('.instagram.com'))) return null;
 
     const segments = url.pathname
       .split('/')

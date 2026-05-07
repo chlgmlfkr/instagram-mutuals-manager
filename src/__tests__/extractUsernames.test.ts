@@ -24,6 +24,14 @@ describe('extractUsernames', () => {
     expect(result.usernames).toEqual(['casey']);
   });
 
+  it('rejects non-instagram hosts that only contain instagram.com in the name', () => {
+    const result = extractUsernames([
+      { string_list_data: [{ href: 'https://notinstagram.com/alice/' }] }
+    ]);
+    expect(result.usernames).toEqual([]);
+    expect(result.skipCount).toBe(1);
+  });
+
   it('extracts all usernames when string_list_data has multiple items', () => {
     const result = extractUsernames([
       {
