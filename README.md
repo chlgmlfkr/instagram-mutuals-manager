@@ -266,4 +266,3 @@ GitHub Pages 또는 Cloudflare Pages에 바로 올릴 수 있습니다.
 - `2026-03-10-리팩토링.md`를 `docs/refactoring-2026-03-10.md`로 이동
 - `README.md`의 폴더 구조 설명을 현재 배치에 맞게 갱신
 - 문서성 파일은 `docs/`, 실행 스크립트는 `scripts/`, 샘플 데이터는 `ins/`에 두는 기준을 명시
-# instagram-mutuals-manager
