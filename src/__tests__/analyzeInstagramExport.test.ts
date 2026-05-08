@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { analyzeInstagramExport } from '../utils/analyzeInstagramExport';
+import JSZip from 'jszip';
+import { InstagramExportAnalysisError, analyzeInstagramExport } from '../utils/analyzeInstagramExport';
 
 function jsonFile(path: string, data: unknown) {
   const text = JSON.stringify(data);
@@ -36,6 +37,7 @@ describe('analyzeInstagramExport', () => {
     expect(result.stats.followingCount).toBe(2);
     expect(result.results.mutuals).toEqual(['alice']);
     expect(result.results.unfollowers).toEqual(['bob']);
+    expect(result.stats.sourceType).toBe('folder');
     expect(result.stats.sourceNote).toContain('폴더 업로드에서 파싱됨');
   });
 
@@ -50,5 +52,17 @@ describe('analyzeInstagramExport', () => {
     const result = await analyzeInstagramExport(null, folderFiles);
 
     expect(result.stats.skipCount).toBe(2);
+  });
+
+  it('exposes zip file list when required relationship files are missing', async () => {
+    const zip = new JSZip();
+    zip.file('connections/followers_and_following/profile.json', JSON.stringify({ name: 'alice' }));
+    const content = await zip.generateAsync({ type: 'uint8array' });
+    const zipFile = new File([content], 'export.zip', { type: 'application/zip' });
+
+    await expect(analyzeInstagramExport(zipFile, [])).rejects.toMatchObject({
+      name: 'InstagramExportAnalysisError',
+      fileList: ['connections/followers_and_following/profile.json']
+    } satisfies Partial<InstagramExportAnalysisError>);
   });
 });

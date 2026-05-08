@@ -3,7 +3,7 @@ import Uploader from './components/Uploader';
 import ResultsTabs from './components/ResultsTabs';
 import StatsCharts from './components/StatsCharts';
 import DownloadGuide from './components/DownloadGuide';
-import { analyzeInstagramExport } from './utils/analyzeInstagramExport';
+import { InstagramExportAnalysisError, analyzeInstagramExport } from './utils/analyzeInstagramExport';
 import { EMPTY_RESULTS, EMPTY_STATS, type Status } from './types/analysis';
 
 export default function App() {
@@ -52,6 +52,9 @@ export default function App() {
   const handleZipChange = (file: File | null) => {
     if (!file) {
       setZipFile(null);
+      setResults(EMPTY_RESULTS);
+      setStats(EMPTY_STATS);
+      setLastFileList([]);
       return;
     }
 
@@ -59,27 +62,48 @@ export default function App() {
       setError('지원되지 않는 파일입니다. Instagram 내보내기 ZIP 파일만 업로드해 주세요.');
       setStatus('error');
       setZipFile(null);
+      setFolderFiles([]);
+      setResults(EMPTY_RESULTS);
+      setStats(EMPTY_STATS);
+      setLastFileList([]);
       return;
     }
 
     setError(null);
     setStatus('idle');
     setZipFile(file);
+    setFolderFiles([]);
+    setResults(EMPTY_RESULTS);
+    setStats(EMPTY_STATS);
+    setLastFileList([]);
   };
 
   const handleFolderChange = (files: File[]) => {
     setFolderFiles(files);
-    if (files.length === 0) return;
+    if (files.length === 0) {
+      setResults(EMPTY_RESULTS);
+      setStats(EMPTY_STATS);
+      setLastFileList([]);
+      return;
+    }
 
     const hasJson = files.some((file) => file.name.toLowerCase().endsWith('.json'));
     if (!hasJson) {
       setError('지원되지 않는 폴더입니다. Instagram 내보내기 폴더(JSON 포함)를 선택해 주세요.');
       setStatus('error');
+      setZipFile(null);
+      setResults(EMPTY_RESULTS);
+      setStats(EMPTY_STATS);
+      setLastFileList([]);
       return;
     }
 
     setError(null);
     if (status === 'error') setStatus('idle');
+    setZipFile(null);
+    setResults(EMPTY_RESULTS);
+    setStats(EMPTY_STATS);
+    setLastFileList([]);
   };
 
   const handleZipRejected = (message: string) => {
@@ -91,7 +115,9 @@ export default function App() {
     if (!zipFile && folderFiles.length === 0) return;
     setError(null);
     setStatus('loading');
-    setStats((prev) => ({ ...prev, ...EMPTY_STATS, sourceNote: prev.sourceNote }));
+    setStats(EMPTY_STATS);
+    setResults(EMPTY_RESULTS);
+    setLastFileList([]);
 
     try {
       setStatus('parsing');
@@ -102,6 +128,9 @@ export default function App() {
       setStatus('done');
     } catch (err) {
       setError(err instanceof Error ? err.message : '알 수 없는 오류');
+      if (err instanceof InstagramExportAnalysisError) {
+        setLastFileList(err.fileList);
+      }
       setStatus('error');
     }
   };
@@ -274,7 +303,15 @@ export default function App() {
                           <div className="flex items-center justify-between rounded-[18px] bg-slate-50 px-4 py-3">
                             <span>입력 소스</span>
                             <span className="font-medium text-slate-900">
-                              {zipFile ? 'ZIP' : hasFolderInput ? 'Folder' : 'None'}
+                              {stats.sourceType === 'zip'
+                                ? 'ZIP'
+                                : stats.sourceType === 'folder'
+                                  ? 'Folder'
+                                  : zipFile
+                                    ? 'ZIP selected'
+                                    : hasFolderInput
+                                      ? 'Folder selected'
+                                      : 'None'}
                             </span>
                           </div>
                           <div className="flex items-center justify-between rounded-[18px] bg-slate-50 px-4 py-3">

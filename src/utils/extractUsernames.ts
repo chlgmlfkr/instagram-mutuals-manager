@@ -6,6 +6,12 @@ export type ExtractResult = {
 const instagramUrlPattern = /(?:https?:\/\/)?(?:www\.)?instagram\.com\/([A-Za-z0-9._]{1,30})/i;
 const handlePattern = /^[A-Za-z0-9._]{1,30}$/;
 
+function normalizeHandle(value: string): string | null {
+  const cleaned = value.trim().replace(/^@/, '').toLowerCase();
+  if (handlePattern.test(cleaned)) return cleaned;
+  return null;
+}
+
 function extractFromHref(href: unknown): string | null {
   if (typeof href !== 'string') return null;
 
@@ -24,15 +30,12 @@ function extractFromHref(href: unknown): string | null {
 
     // Instagram export sometimes stores links like /_u/<username>/...
     const candidate = segments[0].toLowerCase() === '_u' && segments[1] ? segments[1] : segments[0];
-    const cleaned = decodeURIComponent(candidate).replace(/^@/, '').toLowerCase();
-
-    if (handlePattern.test(cleaned)) return cleaned;
-    return null;
+    return normalizeHandle(decodeURIComponent(candidate));
   } catch {
     const match = href.match(instagramUrlPattern);
-    const fallback = match?.[1]?.toLowerCase() ?? null;
-    if (fallback && fallback !== '_u') return fallback;
-    return null;
+    const fallback = match?.[1] ?? null;
+    if (!fallback || fallback.toLowerCase() === '_u') return null;
+    return normalizeHandle(fallback);
   }
 }
 
@@ -66,8 +69,8 @@ function findHandlesInObject(item: unknown): string[] {
 
   for (const str of strings) {
     const trimmed = str.trim().replace(/^@/, '');
-    const normalized = trimmed.toLowerCase();
-    if (handlePattern.test(trimmed) && !seen.has(normalized)) {
+    const normalized = normalizeHandle(trimmed);
+    if (normalized && !seen.has(normalized)) {
       seen.add(normalized);
       extracted.push(normalized);
     }
@@ -83,8 +86,11 @@ function extractFromListData(listData: Array<{ value?: unknown; href?: unknown }
   for (const data of listData) {
     const value = data?.value;
     if (typeof value === 'string' && value.trim().length > 0) {
-      extracted.push(value.trim().toLowerCase());
-      continue;
+      const normalized = normalizeHandle(value);
+      if (normalized) {
+        extracted.push(normalized);
+        continue;
+      }
     }
 
     const fromHref = extractFromHref(data?.href);

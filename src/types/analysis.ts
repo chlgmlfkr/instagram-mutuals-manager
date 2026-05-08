@@ -4,6 +4,7 @@ export type ParsedStats = {
   followersCount: number;
   followingCount: number;
   skipCount: number;
+  sourceType: 'zip' | 'folder' | 'none';
   sourceNote: string;
   usedFollowersFiles: string[];
   usedFollowingFiles: string[];
@@ -31,6 +32,7 @@ export const EMPTY_STATS: ParsedStats = {
   followersCount: 0,
   followingCount: 0,
   skipCount: 0,
+  sourceType: 'none',
   sourceNote: '',
   usedFollowersFiles: [],
   usedFollowingFiles: [],

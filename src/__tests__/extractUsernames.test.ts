@@ -46,6 +46,29 @@ describe('extractUsernames', () => {
     expect(result.skipCount).toBe(0);
   });
 
+  it('rejects invalid string_list_data values', () => {
+    const result = extractUsernames([
+      { string_list_data: [{ value: 'not a valid handle' }] }
+    ]);
+    expect(result.usernames).toEqual([]);
+    expect(result.skipCount).toBe(1);
+  });
+
+  it('falls back to href when string_list_data value is invalid', () => {
+    const result = extractUsernames([
+      {
+        string_list_data: [
+          {
+            value: 'not a valid handle',
+            href: 'https://www.instagram.com/valid.user/'
+          }
+        ]
+      }
+    ]);
+    expect(result.usernames).toEqual(['valid.user']);
+    expect(result.skipCount).toBe(0);
+  });
+
   it('falls back to scanning nested strings', () => {
     const result = extractUsernames([
       { meta: { link: 'https://instagram.com/casey' } }

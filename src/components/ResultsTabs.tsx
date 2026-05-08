@@ -41,14 +41,17 @@ export default function ResultsTabs({
 }: ResultsTabsProps) {
   const [active, setActive] = useState<TabKey>('following');
 
-  const dataMap: Record<TabKey, string[]> = {
-    following,
-    followers,
-    unfollowers,
-    fans,
-    blocked,
-    restricted
-  };
+  const dataMap = useMemo<Record<TabKey, string[]>>(
+    () => ({
+      following,
+      followers,
+      unfollowers,
+      fans,
+      blocked,
+      restricted
+    }),
+    [blocked, fans, followers, following, restricted, unfollowers]
+  );
 
   const visibleTabs = useMemo(() => {
     return tabs.filter((tab) => dataMap[tab.key].length > 0);
