@@ -71,4 +71,21 @@ describe('scanZip', () => {
 
     expect(result.followingFiles).toEqual(['connections/followers_and_following/following.json']);
   });
+
+  it('does not merge relationship files from multiple export roots', async () => {
+    const zip = new JSZip();
+    zip.file('export-a/connections/followers_and_following/followers_1.json', '[]');
+    zip.file('export-a/connections/followers_and_following/following.json', '[]');
+    zip.file('export-b/connections/followers_and_following/followers_1.json', '[]');
+    zip.file('export-b/connections/followers_and_following/following.json', '[]');
+
+    const result = await scanZip(zip);
+
+    expect(result.followersFiles).toEqual([
+      'export-a/connections/followers_and_following/followers_1.json'
+    ]);
+    expect(result.followingFiles).toEqual([
+      'export-a/connections/followers_and_following/following.json'
+    ]);
+  });
 });

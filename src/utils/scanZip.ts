@@ -29,6 +29,11 @@ function fileName(path: string) {
   return path.split('/').pop() ?? path;
 }
 
+function directoryName(path: string) {
+  const index = path.lastIndexOf('/');
+  return index >= 0 ? path.slice(0, index + 1) : '';
+}
+
 function isFollowersFile(path: string) {
   const name = fileName(path);
   return followersPattern.test(name);
@@ -59,6 +64,53 @@ function sortByPriority(a: string, b: string) {
   return partNumber(a) - partNumber(b);
 }
 
+function chooseRelationshipDir(followersFiles: string[], followingFiles: string[]) {
+  const followersDirs = new Set(followersFiles.map(directoryName));
+  const followingDirs = new Set(followingFiles.map(directoryName));
+  const completeDirs = Array.from(followersDirs)
+    .filter((dir) => followingDirs.has(dir))
+    .sort((a, b) => {
+      const scoreDiff = scorePath(b) - scorePath(a);
+      if (scoreDiff !== 0) return scoreDiff;
+      return a.localeCompare(b);
+    });
+
+  return completeDirs[0];
+}
+
+function filterByDir(paths: string[], dir: string | undefined) {
+  return dir ? paths.filter((path) => directoryName(path) === dir) : paths;
+}
+
+function selectRelationshipFiles(
+  allFollowersFiles: string[],
+  allFollowingFiles: string[],
+  allBlockedFiles: string[],
+  allRestrictedFiles: string[]
+) {
+  const preferredFollowersFiles = allFollowersFiles.filter((path) => isInPreferredDir(path));
+  const preferredFollowingFiles = allFollowingFiles.filter((path) => isInPreferredDir(path));
+  const preferredBlockedFiles = allBlockedFiles.filter((path) => isInPreferredDir(path));
+  const preferredRestrictedFiles = allRestrictedFiles.filter((path) => isInPreferredDir(path));
+
+  const followersPool = preferredFollowersFiles.length > 0 ? preferredFollowersFiles : allFollowersFiles;
+  const followingPool = preferredFollowingFiles.length > 0 ? preferredFollowingFiles : allFollowingFiles;
+  const selectedDir = chooseRelationshipDir(followersPool, followingPool);
+
+  return {
+    followersFiles: filterByDir(followersPool, selectedDir),
+    followingFiles: filterByDir(followingPool, selectedDir),
+    blockedFiles: filterByDir(
+      preferredBlockedFiles.length > 0 ? preferredBlockedFiles : allBlockedFiles,
+      selectedDir
+    ),
+    restrictedFiles: filterByDir(
+      preferredRestrictedFiles.length > 0 ? preferredRestrictedFiles : allRestrictedFiles,
+      selectedDir
+    )
+  };
+}
+
 export async function scanZip(zip: JSZip): Promise<ScanResult> {
   const fileList = Object.keys(zip.files).filter((name) => !zip.files[name].dir);
 
@@ -66,17 +118,12 @@ export async function scanZip(zip: JSZip): Promise<ScanResult> {
   const allFollowingFiles = fileList.filter((path) => isFollowingFile(path)).sort(sortByPriority);
   const allBlockedFiles = fileList.filter((path) => isBlockedFile(path)).sort(sortByPriority);
   const allRestrictedFiles = fileList.filter((path) => isRestrictedFile(path)).sort(sortByPriority);
-
-  const preferredFollowersFiles = allFollowersFiles.filter((path) => isInPreferredDir(path));
-  const preferredFollowingFiles = allFollowingFiles.filter((path) => isInPreferredDir(path));
-  const preferredBlockedFiles = allBlockedFiles.filter((path) => isInPreferredDir(path));
-  const preferredRestrictedFiles = allRestrictedFiles.filter((path) => isInPreferredDir(path));
-
-  const followersFiles = preferredFollowersFiles.length > 0 ? preferredFollowersFiles : allFollowersFiles;
-  const followingFiles = preferredFollowingFiles.length > 0 ? preferredFollowingFiles : allFollowingFiles;
-  const blockedFiles = preferredBlockedFiles.length > 0 ? preferredBlockedFiles : allBlockedFiles;
-  const restrictedFiles =
-    preferredRestrictedFiles.length > 0 ? preferredRestrictedFiles : allRestrictedFiles;
+  const { followersFiles, followingFiles, blockedFiles, restrictedFiles } = selectRelationshipFiles(
+    allFollowersFiles,
+    allFollowingFiles,
+    allBlockedFiles,
+    allRestrictedFiles
+  );
 
   return {
     followersFiles,
@@ -108,24 +155,20 @@ export function scanFolderFiles(files: File[]): FolderScanResult {
     .filter((file) => isRestrictedFile(file.name))
     .sort((a, b) => sortByPriority(a.webkitRelativePath || a.name, b.webkitRelativePath || b.name));
 
-  const preferredFollowersFiles = followersFiles.filter((file) =>
-    isInPreferredDir(file.webkitRelativePath || file.name)
+  const fileByPath = new Map(files.map((file) => [file.webkitRelativePath || file.name, file]));
+  const selected = selectRelationshipFiles(
+    followersFiles.map((file) => file.webkitRelativePath || file.name),
+    followingFiles.map((file) => file.webkitRelativePath || file.name),
+    blockedFiles.map((file) => file.webkitRelativePath || file.name),
+    restrictedFiles.map((file) => file.webkitRelativePath || file.name)
   );
-  const preferredFollowingFiles = followingFiles.filter((file) =>
-    isInPreferredDir(file.webkitRelativePath || file.name)
-  );
-  const preferredBlockedFiles = blockedFiles.filter((file) =>
-    isInPreferredDir(file.webkitRelativePath || file.name)
-  );
-  const preferredRestrictedFiles = restrictedFiles.filter((file) =>
-    isInPreferredDir(file.webkitRelativePath || file.name)
-  );
+  const toFiles = (paths: string[]) =>
+    paths.map((path) => fileByPath.get(path)).filter((file): file is File => Boolean(file));
 
   return {
-    followersFiles: preferredFollowersFiles.length > 0 ? preferredFollowersFiles : followersFiles,
-    followingFiles: preferredFollowingFiles.length > 0 ? preferredFollowingFiles : followingFiles,
-    blockedFiles: preferredBlockedFiles.length > 0 ? preferredBlockedFiles : blockedFiles,
-    restrictedFiles:
-      preferredRestrictedFiles.length > 0 ? preferredRestrictedFiles : restrictedFiles
+    followersFiles: toFiles(selected.followersFiles),
+    followingFiles: toFiles(selected.followingFiles),
+    blockedFiles: toFiles(selected.blockedFiles),
+    restrictedFiles: toFiles(selected.restrictedFiles)
   };
 }

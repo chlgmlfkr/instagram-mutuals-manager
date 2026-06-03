@@ -5,9 +5,29 @@ export type ExtractResult = {
 
 const instagramUrlPattern = /(?:https?:\/\/)?(?:www\.)?instagram\.com\/([A-Za-z0-9._]{1,30})/i;
 const handlePattern = /^[A-Za-z0-9._]{1,30}$/;
+const reservedInstagramRoutes = new Set([
+  'about',
+  'accounts',
+  'api',
+  'challenge',
+  'developer',
+  'direct',
+  'explore',
+  'graphql',
+  'legal',
+  'oauth',
+  'p',
+  'privacy',
+  'reel',
+  'reels',
+  'stories',
+  'terms',
+  'tv'
+]);
 
 function normalizeHandle(value: string): string | null {
   const cleaned = value.trim().replace(/^@/, '').toLowerCase();
+  if (reservedInstagramRoutes.has(cleaned)) return null;
   if (handlePattern.test(cleaned)) return cleaned;
   return null;
 }
@@ -113,6 +133,11 @@ export function extractUsernames(entries: unknown[]): ExtractResult {
     const fromListData = extractFromListData(listData);
     if (fromListData.length > 0) {
       usernames.push(...fromListData);
+      continue;
+    }
+
+    if (Array.isArray(listData)) {
+      skipCount += 1;
       continue;
     }
 

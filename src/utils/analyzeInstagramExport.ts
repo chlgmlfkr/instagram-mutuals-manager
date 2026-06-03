@@ -25,10 +25,28 @@ function dedupeUsernames(usernames: string[]) {
   return Array.from(new Set(usernames));
 }
 
-async function loadEntriesFromPaths(zip: JSZip, paths: string[]) {
+function folderFilePath(file: File) {
+  return file.webkitRelativePath || file.name;
+}
+
+function folderFileList(files: File[]) {
+  return files.map(folderFilePath);
+}
+
+function jsonParseError(path: string, fileList: string[]) {
+  return new InstagramExportAnalysisError(`JSON 파싱 실패: ${path}`, fileList);
+}
+
+async function loadEntriesFromPaths(zip: JSZip, paths: string[], fileList: string[]) {
   const batches = await Promise.all(
     paths.map(async (path) => {
-      const data = await loadJson(zip, path);
+      let data: unknown;
+      try {
+        data = await loadJson(zip, path);
+      } catch (err) {
+        if (err instanceof SyntaxError) throw jsonParseError(path, fileList);
+        throw err;
+      }
       return extractEntries(data);
     })
   );
@@ -36,10 +54,16 @@ async function loadEntriesFromPaths(zip: JSZip, paths: string[]) {
   return batches.flat();
 }
 
-async function loadEntriesFromFiles(files: File[]) {
+async function loadEntriesFromFiles(files: File[], fileList: string[]) {
   const batches = await Promise.all(
     files.map(async (file) => {
-      const data = await readFolderJson(file);
+      let data: unknown;
+      try {
+        data = await readFolderJson(file);
+      } catch (err) {
+        if (err instanceof SyntaxError) throw jsonParseError(folderFilePath(file), fileList);
+        throw err;
+      }
       return extractEntries(data);
     })
   );
@@ -72,35 +96,37 @@ export async function analyzeInstagramExport(
   let usedFollowingFiles = followingFiles;
   let usedBlockedFiles = blockedFiles;
   let usedRestrictedFiles = restrictedFiles;
+  let sourceFileList = fileList;
 
   if (followersFiles.length > 0 && followingFiles.length > 0) {
     [followersEntries, followingEntries, blockedEntries, restrictedEntries] = await Promise.all([
-      loadEntriesFromPaths(zip, followersFiles),
-      loadEntriesFromPaths(zip, followingFiles),
-      loadEntriesFromPaths(zip, blockedFiles),
-      loadEntriesFromPaths(zip, restrictedFiles)
+      loadEntriesFromPaths(zip, followersFiles, sourceFileList),
+      loadEntriesFromPaths(zip, followingFiles, sourceFileList),
+      loadEntriesFromPaths(zip, blockedFiles, sourceFileList),
+      loadEntriesFromPaths(zip, restrictedFiles, sourceFileList)
     ]);
   } else if (folderFiles.length > 0) {
     const folderScan = scanFolderFiles(folderFiles);
+    sourceFileList = folderFileList(folderFiles);
     if (folderScan.followersFiles.length === 0 || folderScan.followingFiles.length === 0) {
       throw new InstagramExportAnalysisError(
         '지원되지 않는 폴더입니다. followers/following 파일이 포함된 Instagram 내보내기 폴더를 선택해 주세요.',
-        fileList
+        sourceFileList
       );
     }
 
     sourceNote = '폴더 업로드에서 파싱됨 (ZIP 내 파일 미발견)';
     sourceType = 'folder';
-    usedFollowersFiles = folderScan.followersFiles.map((file) => file.webkitRelativePath || file.name);
-    usedFollowingFiles = folderScan.followingFiles.map((file) => file.webkitRelativePath || file.name);
-    usedBlockedFiles = folderScan.blockedFiles.map((file) => file.webkitRelativePath || file.name);
-    usedRestrictedFiles = folderScan.restrictedFiles.map((file) => file.webkitRelativePath || file.name);
+    usedFollowersFiles = folderScan.followersFiles.map(folderFilePath);
+    usedFollowingFiles = folderScan.followingFiles.map(folderFilePath);
+    usedBlockedFiles = folderScan.blockedFiles.map(folderFilePath);
+    usedRestrictedFiles = folderScan.restrictedFiles.map(folderFilePath);
 
     [followersEntries, followingEntries, blockedEntries, restrictedEntries] = await Promise.all([
-      loadEntriesFromFiles(folderScan.followersFiles),
-      loadEntriesFromFiles(folderScan.followingFiles),
-      loadEntriesFromFiles(folderScan.blockedFiles),
-      loadEntriesFromFiles(folderScan.restrictedFiles)
+      loadEntriesFromFiles(folderScan.followersFiles, sourceFileList),
+      loadEntriesFromFiles(folderScan.followingFiles, sourceFileList),
+      loadEntriesFromFiles(folderScan.blockedFiles, sourceFileList),
+      loadEntriesFromFiles(folderScan.restrictedFiles, sourceFileList)
     ]);
   } else {
     throw new InstagramExportAnalysisError(
@@ -143,6 +169,6 @@ export async function analyzeInstagramExport(
       blocked: uniqueBlocked,
       restricted: uniqueRestricted
     },
-    fileList
+    fileList: sourceFileList
   };
 }

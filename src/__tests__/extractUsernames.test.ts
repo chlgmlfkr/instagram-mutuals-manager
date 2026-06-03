@@ -32,6 +32,17 @@ describe('extractUsernames', () => {
     expect(result.skipCount).toBe(1);
   });
 
+  it('rejects Instagram reserved routes as usernames', () => {
+    const result = extractUsernames([
+      { string_list_data: [{ href: 'https://www.instagram.com/accounts/login/' }] },
+      { string_list_data: [{ href: 'https://www.instagram.com/p/CODE123/' }] },
+      { string_list_data: [{ href: 'https://www.instagram.com/reel/CODE123/' }] }
+    ]);
+
+    expect(result.usernames).toEqual([]);
+    expect(result.skipCount).toBe(3);
+  });
+
   it('extracts all usernames when string_list_data has multiple items', () => {
     const result = extractUsernames([
       {
@@ -67,6 +78,18 @@ describe('extractUsernames', () => {
     ]);
     expect(result.usernames).toEqual(['valid.user']);
     expect(result.skipCount).toBe(0);
+  });
+
+  it('does not promote unrelated metadata when string_list_data is malformed', () => {
+    const result = extractUsernames([
+      {
+        title: 'settings',
+        string_list_data: [{ value: 'not a valid handle' }]
+      }
+    ]);
+
+    expect(result.usernames).toEqual([]);
+    expect(result.skipCount).toBe(1);
   });
 
   it('falls back to scanning nested strings', () => {

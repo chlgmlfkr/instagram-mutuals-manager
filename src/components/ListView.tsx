@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useId, useMemo, useRef, useState } from 'react';
 import { exportCsv } from '../utils/exportCsv';
 
 export type ListViewProps = {
@@ -6,12 +6,17 @@ export type ListViewProps = {
   items: string[];
   accent: string;
   description?: string;
+  emptyMessage?: string;
 };
 
-export default function ListView({ title, items, accent, description }: ListViewProps) {
+export default function ListView({ title, items, accent, description, emptyMessage }: ListViewProps) {
+  const searchId = useId();
+  const sortId = useId();
   const [query, setQuery] = useState('');
   const [sortAZ, setSortAZ] = useState(true);
-  const [copyState, setCopyState] = useState<'idle' | 'copied'>('idle');
+  const [selected, setSelected] = useState<Set<string>>(() => new Set());
+  const [copyState, setCopyState] = useState<'idle' | 'copied' | 'failed'>('idle');
+  const resetTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -22,43 +27,118 @@ export default function ListView({ title, items, accent, description }: ListView
     return list;
   }, [items, query, sortAZ]);
 
-  const handleCopy = async () => {
+  useEffect(() => {
+    setSelected((current) => {
+      const next = new Set(Array.from(current).filter((item) => items.includes(item)));
+      return next.size === current.size ? current : next;
+    });
+  }, [items]);
+
+  useEffect(() => {
+    return () => {
+      if (resetTimer.current) clearTimeout(resetTimer.current);
+    };
+  }, []);
+
+  const scheduleCopyStateReset = (delay: number) => {
+    if (resetTimer.current) clearTimeout(resetTimer.current);
+    resetTimer.current = setTimeout(() => setCopyState('idle'), delay);
+  };
+
+  const copyUsernames = async (usernames: string[]) => {
+    if (usernames.length === 0) return;
+
     try {
-      await navigator.clipboard.writeText(filtered.join('\n'));
+      await navigator.clipboard.writeText(usernames.join('\n'));
       setCopyState('copied');
-      setTimeout(() => setCopyState('idle'), 1200);
+      scheduleCopyStateReset(1200);
     } catch {
-      setCopyState('idle');
+      setCopyState('failed');
+      scheduleCopyStateReset(1800);
     }
   };
 
+  const hasFilteredItems = filtered.length > 0;
+  const selectedItems = filtered.filter((item) => selected.has(item));
+  const hasSelectedItems = selectedItems.length > 0;
+
+  const toggleSelected = (username: string) => {
+    setSelected((current) => {
+      const next = new Set(current);
+      if (next.has(username)) {
+        next.delete(username);
+      } else {
+        next.add(username);
+      }
+      return next;
+    });
+  };
+
+  const toggleAllFiltered = () => {
+    setSelected((current) => {
+      const next = new Set(current);
+      const allSelected = filtered.every((item) => next.has(item));
+      filtered.forEach((item) => {
+        if (allSelected) {
+          next.delete(item);
+        } else {
+          next.add(item);
+        }
+      });
+      return next;
+    });
+  };
+
   return (
-    <div className="rounded-[26px] border border-slate-200 bg-white p-5 shadow-[0_24px_60px_rgba(15,23,42,0.08)]">
+    <div className="flex min-h-0 flex-col rounded-2xl border border-slate-200 bg-white p-4">
       <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 pb-4">
-        <div>
+        <div className="min-w-0">
           <p className={`text-lg font-semibold ${accent}`}>{title}</p>
           {description && <p className="mt-1 max-w-2xl text-xs leading-5 text-slate-500">{description}</p>}
           <p className="mt-1 text-sm text-slate-500">총 {items.length}명</p>
         </div>
         <div className="flex flex-wrap items-center gap-2">
-          <button className="btn-outline" onClick={handleCopy}>
-            {copyState === 'copied' ? '복사됨' : '복사'}
+          <button
+            type="button"
+            className="btn-outline"
+            onClick={() => copyUsernames(hasSelectedItems ? selectedItems : filtered)}
+            disabled={!hasFilteredItems}
+          >
+            {copyState === 'copied'
+              ? '복사됨'
+              : copyState === 'failed'
+                ? '복사 실패'
+                : hasSelectedItems
+                  ? `선택 ${selectedItems.length}명 복사`
+                  : '필터 결과 복사'}
           </button>
-          <button className="btn-outline" onClick={() => exportCsv(filtered, `${title}.csv`)}>
-            CSV 다운로드
+          <button
+            type="button"
+            className="btn-outline"
+            onClick={() => exportCsv(hasSelectedItems ? selectedItems : filtered, `${title}.csv`)}
+            disabled={!hasFilteredItems}
+          >
+            CSV
           </button>
         </div>
       </div>
 
       <div className="mt-4 flex flex-wrap items-center gap-3">
-        <input
-          value={query}
-          onChange={(event) => setQuery(event.target.value)}
-          placeholder="검색"
-          className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-800 placeholder:text-slate-400 focus:border-amber-300 focus:bg-white focus:outline-none md:w-72"
-        />
-        <label className="flex items-center gap-2 text-xs text-slate-500">
+        <div className="w-full md:w-72">
+          <label htmlFor={searchId} className="sr-only">
+            {title} 검색
+          </label>
           <input
+            id={searchId}
+            value={query}
+            onChange={(event) => setQuery(event.target.value)}
+            placeholder="검색"
+            className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-800 placeholder:text-slate-400 focus:border-amber-300 focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-200"
+          />
+        </div>
+        <label htmlFor={sortId} className="flex items-center gap-2 text-xs text-slate-500">
+          <input
+            id={sortId}
             type="checkbox"
             checked={sortAZ}
             onChange={(event) => setSortAZ(event.target.checked)}
@@ -69,24 +149,54 @@ export default function ListView({ title, items, accent, description }: ListView
         <span className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-medium text-slate-600">
           필터 {filtered.length}명
         </span>
+        <button
+          type="button"
+          className="rounded-full border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-600 disabled:cursor-not-allowed disabled:text-slate-300"
+          onClick={toggleAllFiltered}
+          disabled={!hasFilteredItems}
+        >
+          {hasFilteredItems && filtered.every((item) => selected.has(item)) ? '전체 해제' : '필터 전체 선택'}
+        </button>
+        <span className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-medium text-slate-600">
+          선택 {selectedItems.length}명
+        </span>
+        <span className="sr-only" aria-live="polite">
+          {copyState === 'copied'
+            ? '목록을 클립보드에 복사했습니다.'
+            : copyState === 'failed'
+              ? '클립보드 복사에 실패했습니다.'
+              : ''}
+        </span>
       </div>
 
-      <div className="mt-4 max-h-[420px] overflow-y-auto rounded-[22px] border border-slate-200 bg-slate-50/80">
+      <div className="mt-4 max-h-[min(620px,calc(100vh-420px))] min-h-[320px] overflow-y-auto rounded-xl border border-slate-200 bg-slate-50/80">
         {filtered.length === 0 ? (
-          <div className="p-8 text-center text-sm text-slate-500">표시할 사용자가 없습니다.</div>
+          <div className="p-8 text-center text-sm leading-6 text-slate-500">
+            {emptyMessage ?? '표시할 사용자가 없습니다.'}
+          </div>
         ) : (
           <ul className="divide-y divide-slate-200/80">
             {filtered.map((user) => (
-              <li key={user} className="flex items-center justify-between px-4 py-3 text-sm">
-                <a
-                  href={`https://instagram.com/${user}`}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="font-medium text-slate-700 transition hover:text-amber-600"
-                >
-                  @{user}
-                </a>
-                <span className="rounded-full bg-white px-2.5 py-1 text-[11px] font-medium text-slate-400">
+              <li key={user} className="flex min-w-0 items-center justify-between gap-3 px-4 py-3 text-sm">
+                <div className="flex min-w-0 flex-1 items-center gap-3">
+                  <input
+                    type="checkbox"
+                    checked={selected.has(user)}
+                    onChange={() => toggleSelected(user)}
+                    className="h-4 w-4 shrink-0 accent-slate-900"
+                    aria-label={`${user} 선택`}
+                  />
+                  <a
+                    href={`https://instagram.com/${user}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="min-w-0 truncate font-medium text-slate-700 transition hover:text-amber-600 focus:outline-none focus:ring-2 focus:ring-amber-200"
+                    aria-label={`${user} Instagram 프로필 열기`}
+                  >
+                    @{user}
+                  </a>
+                </div>
+                <span className="shrink-0 rounded-full bg-white px-2.5 py-1 text-[11px] font-medium text-slate-400">
                   Instagram
                 </span>
               </li>

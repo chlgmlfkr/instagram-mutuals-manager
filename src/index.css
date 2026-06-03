@@ -1,5 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&display=swap');
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -9,39 +7,37 @@
 }
 
 body {
-  font-family: 'Space Grotesk', system-ui, sans-serif;
-  background:
-    radial-gradient(1200px 620px at -6% 112%, rgba(251, 146, 60, 0.34), transparent 54%),
-    radial-gradient(760px 420px at 100% -10%, rgba(254, 215, 170, 0.18), transparent 60%),
-    linear-gradient(180deg, #3d1f15 0%, #24110c 100%);
+  font-family:
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+  background: #d7372f;
   min-height: 100vh;
 }
 
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+a:focus-visible {
+  outline: 2px solid #f59e0b;
+  outline-offset: 2px;
+}
+
 @layer components {
-  .browser-shell {
-    background:
-      radial-gradient(640px 280px at 78% 88%, rgba(245, 158, 11, 0.16), transparent 60%),
-      linear-gradient(180deg, #f6f0ea 0%, #f7f4ef 100%);
-  }
-  .workspace-shell {
-    box-shadow:
-      0 24px 80px rgba(15, 23, 42, 0.08),
-      inset 0 1px 0 rgba(255, 255, 255, 0.7);
-  }
-  .panel-surface {
-    @apply border border-slate-200 bg-white shadow-[0_20px_55px_rgba(15,23,42,0.06)];
-  }
   .btn {
-    @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-full px-5 py-3 text-sm font-semibold transition;
+    @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-full px-5 py-3 text-center text-sm font-semibold transition;
   }
   .btn-primary {
     @apply btn bg-slate-900 text-white hover:bg-slate-800 disabled:cursor-not-allowed disabled:bg-slate-300;
   }
-  .btn-outline {
-    @apply btn border border-slate-200 bg-white text-slate-700 hover:border-slate-300 hover:bg-slate-50;
+  .btn-brand {
+    @apply btn bg-[#d7372f] text-white hover:bg-[#b92620] disabled:cursor-not-allowed disabled:bg-slate-300;
   }
-  .chip {
-    @apply rounded-full border border-slate-200 bg-white px-3 py-1 text-xs text-slate-600;
+  .btn-outline {
+    @apply btn border border-slate-200 bg-white text-slate-700 hover:border-slate-300 hover:bg-slate-50 disabled:cursor-not-allowed disabled:bg-slate-100 disabled:text-slate-400;
   }
 }
 
