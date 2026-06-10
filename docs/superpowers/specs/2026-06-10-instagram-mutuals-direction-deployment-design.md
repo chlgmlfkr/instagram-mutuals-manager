@@ -23,6 +23,26 @@
 - 배포 방향: Cloudflare Pages 1순위, Vercel 2순위, GitHub Pages 3순위.
 - 디자인 구현은 `getdesign.md` 작성 후 시작.
 
+## 서브스레드 점검 반영
+
+2026-06-10에 제품/UX, 배포/운영, 수익화/정책 관점으로 계획을 나눠 점검했습니다. 세 관점의 공통 결론은 다음과 같습니다.
+
+1. 제품의 첫 화면과 결과 기본값은 `관계 분석 워크스페이스`보다 `언팔로워 후보 확인`에 더 직접적으로 맞춥니다.
+2. 관계 분석과 차트는 차별점이지만 기본값이 아니라 접힌 보조 영역입니다.
+3. 현재 `DESIGN.md`의 브랜드형/coral-red 방향과 새로 잡은 담백한 Instagram-adjacent 방향 사이의 충돌을 `getdesign.md`에서 먼저 정리합니다.
+4. 배포는 Cloudflare Pages가 맞지만, 공개 런칭 전에는 `public/` 정적 파일, SEO 메타, 개인정보/공식 아님 안내, smoke test가 필요합니다.
+5. 광고 수익화는 가능하지만, 단일 SPA 도구만으로는 심사와 검색 유입이 약합니다. 가이드/해석/오류/개인정보 콘텐츠가 선행되어야 합니다.
+
+따라서 현재 확정 계획은 다음 순서로 잠급니다.
+
+1. `getdesign.md`에서 첫 화면, 결과 화면, 문구, 기존 브랜드 톤의 유지/축소/폐기를 결정합니다.
+2. 언팔로워 후보 확인 흐름을 먼저 정리합니다.
+3. 결과 테이블, 검색, 정렬, 복사, CSV, 진단 정보를 안정화합니다.
+4. 관계 분석은 접힌 보조 영역으로 추가합니다.
+5. 개인정보/공식 아님/로컬 분석 안내와 SEO용 가이드 콘텐츠를 추가합니다.
+6. Cloudflare Pages preview 배포로 desktop/mobile smoke test를 진행합니다.
+7. 광고는 placeholder로 레이아웃만 먼저 검증하고, 실제 스크립트는 콘텐츠와 신뢰 문서가 준비된 뒤 붙입니다.
+
 ## 제품 구조
 
 결과 화면은 가장 먼저 한 질문에 답해야 합니다.
@@ -91,6 +111,7 @@
 
 - 도메인 또는 안정적인 서브도메인.
 - 사이트 이름과 메타 설명.
+- `public/` 정적 파일 디렉터리.
 - 개인정보 처리 안내.
 - `Instagram/Meta 공식 서비스가 아님` 안내.
 - `파일은 이 앱의 서버로 전송되지 않고 브라우저에서 분석됨` 안내.
@@ -101,6 +122,16 @@
 - Instagram export 다운로드 가이드.
 - 오류/진단/결과 해석 페이지 또는 섹션.
 - 데스크톱/모바일 배포 후 업로드 smoke test.
+
+1차 런칭 순서:
+
+1. `getdesign.md`로 언팔로워 중심 화면 톤을 확정합니다.
+2. `npm test -- --run`, `npm run build`, `npm run preview`를 통과시킵니다.
+3. `robots.txt`, `sitemap.xml`, OG 메타/이미지를 추가합니다.
+4. 개인정보, 공식 서비스 아님, 로컬 분석 안내를 앱과 문서에 노출합니다.
+5. Cloudflare Pages preview 배포 후 실제 ZIP으로 데스크톱/모바일 smoke test를 합니다.
+6. 문제가 없으면 커스텀 도메인 또는 안정 서브도메인으로 공개합니다.
+7. 광고는 실제 스크립트 없이 자리만 잡고, 성능과 신뢰 저하 여부를 본 뒤 별도 단계로 도입합니다.
 
 ## 수익화 계획
 
@@ -131,6 +162,21 @@
 - 요약 결과와 첫 언팔로워 테이블 사이.
 
 광고 심사를 생각하면 순수 SPA 도구 하나만으로는 약할 수 있습니다. export 다운로드 방법, 결과 해석, 개인정보 처리, 오류 해결 같은 콘텐츠 표면을 함께 만들어야 합니다.
+
+수익화 전 최소 콘텐츠:
+
+- `/guide/instagram-export-download`: Instagram 내보내기 다운로드 방법.
+- `/guide/unfollowers-meaning`: 언팔로워, 언팔로우, 맞팔 차이와 결과 해석.
+- `/guide/why-results-look-wrong`: export 시점, 삭제 계정, 누락 파일 등 결과가 틀려 보이는 이유.
+- `/privacy`: 로컬 분석, 수집하지 않는 데이터, 광고/쿠키, 측정 이벤트 범위.
+
+초기 검색 의도:
+
+- `인스타 언팔로워 확인`
+- `인스타 맞팔 확인`
+- `인스타그램 내보내기`
+- `인스타 데이터 다운로드`
+- `인스타 팔로워 json`
 
 ## 추가로 신경써야 할 부분
 
@@ -184,6 +230,19 @@ SEO와 유입:
 - 실제 광고 스크립트 전에 광고 placeholder 레이아웃부터 검증합니다.
 - `.superpowers/` 같은 브레인스토밍 산출물은 git에 넣지 않습니다.
 
+`getdesign.md` 필수 항목:
+
+- 첫 화면의 단일 목표: Instagram export로 `언팔로워 후보`를 확인한다.
+- H1/CTA 문구 후보와 피해야 할 문구.
+- 결과 화면 정보 순서: 요약, 언팔로워 테이블, 진단 문구, 관계 분석 펼치기, 파일/파서 진단.
+- Toollyst에서 참고할 요소와 복제 금지 요소.
+- 기존 브랜드형/coral-red 화면을 유지할지, 축소할지, 폐기할지.
+- 모바일 첫 viewport에서 업로드 CTA가 보이는 기준.
+- 개인정보/공식 서비스 아님/광고 안내 문구 위치.
+- 광고 허용 위치와 금지 위치.
+- 차트는 기본 접힘, 날짜 누락 시 과장 금지.
+- 용어 정의: 언팔로워 후보, 언팔로우, 맞팔, 팔로우, 팔로워.
+
 ## 남은 질문
 
 - 최종 사이트 이름과 도메인.
@@ -198,3 +257,5 @@ SEO와 유입:
 - Cloudflare Pages Vite guide: https://developers.cloudflare.com/pages/framework-guides/deploy-a-vite3-project/
 - Vercel Vite guide: https://vercel.com/docs/frameworks/frontend/vite
 - Google AdSense eligibility: https://support.google.com/adsense/answer/9724
+- Google AdSense ad placement policies: https://support.google.com/adsense/answer/1346295
+- Kakao AdFit: https://adfit.kakao.com/
