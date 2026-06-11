@@ -124,7 +124,7 @@ export async function analyzeInstagramExport(
       );
     }
 
-    sourceNote = '폴더 업로드에서 파싱됨 (ZIP 내 파일 미발견)';
+    sourceNote = '폴더 업로드에서 파싱됨 (ZIP에서 필요한 followers/following 쌍을 찾지 못함)';
     sourceType = 'folder';
     usedFollowersFiles = folderScan.followersFiles.map(folderFilePath);
     usedFollowingFiles = folderScan.followingFiles.map(folderFilePath);

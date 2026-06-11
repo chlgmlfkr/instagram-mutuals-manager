@@ -30,6 +30,15 @@ function withRelativePath(file: File, path: string) {
   return file;
 }
 
+async function zipFileFromEntries(entries: Record<string, unknown>) {
+  const zip = new JSZip();
+  Object.entries(entries).forEach(([path, data]) => {
+    zip.file(path, JSON.stringify(data));
+  });
+  const content = await zip.generateAsync({ type: 'uint8array' });
+  return new File([content as BlobPart], 'export.zip', { type: 'application/zip' });
+}
+
 describe('analyzeInstagramExport', () => {
   it('reports unreadable ZIP files with a user-facing message', async () => {
     const zipFile = new File(['not-a-real-zip'], 'broken.zip', { type: 'application/zip' });
@@ -66,6 +75,64 @@ describe('analyzeInstagramExport', () => {
     expect(result.results.unfollowers).toEqual(['bob']);
     expect(result.stats.sourceType).toBe('folder');
     expect(result.stats.sourceNote).toContain('폴더 업로드에서 파싱됨');
+  });
+
+  it('uses a complete ZIP instead of stale folder files when both inputs exist', async () => {
+    const zipFile = await zipFileFromEntries({
+      'export/connections/followers_and_following/followers_1.json': [
+        { string_list_data: [{ value: 'zip_follower' }] }
+      ],
+      'export/connections/followers_and_following/following.json': [
+        { string_list_data: [{ value: 'zip_follower' }, { value: 'zip_only_following' }] }
+      ]
+    });
+    const folderFiles = [
+      withRelativePath(
+        jsonFile('followers_1.json', [{ string_list_data: [{ value: 'folder_follower' }] }]),
+        'stale/connections/followers_and_following/followers_1.json'
+      ),
+      withRelativePath(
+        jsonFile('following.json', [
+          { string_list_data: [{ value: 'folder_follower' }, { value: 'folder_only_following' }] }
+        ]),
+        'stale/connections/followers_and_following/following.json'
+      )
+    ];
+
+    const result = await analyzeInstagramExport(zipFile, folderFiles);
+
+    expect(result.stats.sourceType).toBe('zip');
+    expect(result.results.followers).toEqual(['zip_follower']);
+    expect(result.results.unfollowers).toEqual(['zip_only_following']);
+    expect(result.results.followers).not.toContain('folder_follower');
+    expect(result.results.unfollowers).not.toContain('folder_only_following');
+  });
+
+  it('falls back to folder files when the ZIP has only one side of the relationship pair', async () => {
+    const zipFile = await zipFileFromEntries({
+      'export/connections/followers_and_following/followers_1.json': [
+        { string_list_data: [{ value: 'zip_follower' }] }
+      ]
+    });
+    const folderFiles = [
+      withRelativePath(
+        jsonFile('followers_1.json', [{ string_list_data: [{ value: 'folder_follower' }] }]),
+        'fallback/connections/followers_and_following/followers_1.json'
+      ),
+      withRelativePath(
+        jsonFile('following.json', [
+          { string_list_data: [{ value: 'folder_follower' }, { value: 'folder_only_following' }] }
+        ]),
+        'fallback/connections/followers_and_following/following.json'
+      )
+    ];
+
+    const result = await analyzeInstagramExport(zipFile, folderFiles);
+
+    expect(result.stats.sourceType).toBe('folder');
+    expect(result.stats.sourceNote).toContain('followers/following 쌍을 찾지 못함');
+    expect(result.results.followers).toEqual(['folder_follower']);
+    expect(result.results.unfollowers).toEqual(['folder_only_following']);
   });
 
   it('combines multipart relationship files from one export root', async () => {
