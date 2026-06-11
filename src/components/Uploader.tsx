@@ -122,42 +122,6 @@ export default function Uploader({
         </div>
       </div>
 
-      <div className="mt-4 rounded-xl border border-slate-200 bg-slate-50 p-4">
-        <div className="flex flex-col gap-3">
-          <div className="flex items-center justify-between gap-3">
-          <div className="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-white text-xs font-semibold text-slate-700 ring-1 ring-slate-200">
-            DIR
-          </div>
-          <span className="rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-semibold text-slate-500">
-            보조 옵션
-          </span>
-          </div>
-          <p className="text-base font-semibold text-slate-900">압축 해제 폴더 업로드</p>
-          <p className="text-sm leading-6 text-slate-500">
-            압축을 풀어둔 Instagram export 폴더를 바로 선택할 수 있습니다.
-          </p>
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-            <label className="btn-outline cursor-pointer">
-              폴더 선택
-              <input
-                type="file"
-                // @ts-expect-error: webkitdirectory is supported in Chromium-based browsers.
-                webkitdirectory="true"
-                className="hidden"
-                aria-label="내보내기 폴더 선택"
-                onChange={(event) => onFolderChange(Array.from(event.target.files ?? []))}
-              />
-            </label>
-            <span
-              className="min-w-0 truncate rounded-lg bg-slate-100 px-4 py-3 text-sm text-slate-600 sm:flex-1"
-              title={folderSummary}
-            >
-              {folderSummary}
-            </span>
-          </div>
-        </div>
-      </div>
-
       <div className="mt-5 flex flex-wrap gap-2">
         <span className="rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1.5 text-xs font-semibold text-emerald-700">
           서버 미전송
@@ -185,6 +149,41 @@ export default function Uploader({
           {disabled && hasInput ? '분석 중...' : '분석 시작'}
         </button>
       </div>
+
+      <details className="mt-4 rounded-xl border border-slate-200 bg-slate-50 p-4">
+        <summary className="cursor-pointer list-none">
+          <div className="flex items-center justify-between gap-3">
+            <div>
+              <p className="text-base font-semibold text-slate-900">압축 해제 폴더 업로드</p>
+              <p className="mt-1 text-sm leading-6 text-slate-500">
+                ZIP이 없을 때만 사용하는 보조 옵션입니다.
+              </p>
+            </div>
+            <span className="rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-semibold text-slate-500">
+              보조 옵션
+            </span>
+          </div>
+        </summary>
+        <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center">
+          <label className="btn-outline cursor-pointer">
+            폴더 선택
+            <input
+              type="file"
+              // @ts-expect-error: webkitdirectory is supported in Chromium-based browsers.
+              webkitdirectory="true"
+              className="hidden"
+              aria-label="내보내기 폴더 선택"
+              onChange={(event) => onFolderChange(Array.from(event.target.files ?? []))}
+            />
+          </label>
+          <span
+            className="min-w-0 truncate rounded-lg bg-slate-100 px-4 py-3 text-sm text-slate-600 sm:flex-1"
+            title={folderSummary}
+          >
+            {folderSummary}
+          </span>
+        </div>
+      </details>
     </div>
   );
 }

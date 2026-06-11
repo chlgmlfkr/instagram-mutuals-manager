@@ -51,6 +51,12 @@ describe('App smoke flow', () => {
     expect(container.textContent).toContain('분석 시작');
     expect(container.textContent).toContain('다운로드 가이드');
     expect(container.textContent).not.toContain('드리블 스타일');
+    expect(container.textContent.indexOf('ZIP 선택하기')).toBeLessThan(
+      container.textContent.indexOf('분석 시작')
+    );
+    expect(container.textContent.indexOf('분석 시작')).toBeLessThan(
+      container.textContent.indexOf('압축 해제 폴더 업로드')
+    );
 
     const guideButton = Array.from(container.querySelectorAll('button')).find(
       (button) => button.textContent === '다운로드 가이드'
