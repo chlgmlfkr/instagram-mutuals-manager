@@ -257,7 +257,7 @@ Chosen direction: **Private Export Console**. The product should feel like a pri
 ## Content voice
 - Tone: Korean-first, direct, calm, privacy-aware, operational.
 - Terminology:
-  - Use `맞팔`, `언팔로워`, `언팔로우`, `제한`, `차단` consistently.
+  - Use `맞팔`, `언팔로워 후보`, `나를 팔로우함`, `제한`, `차단` consistently.
   - Use `ZIP`, `Folder`, `JSON`, `CSV`, and file paths as technical nouns where clearer than translation.
   - Say `브라우저 로컬`, `서버로 전송하지 않습니다`, and `로그인 불필요` near relevant actions.
 - Microcopy rules:
