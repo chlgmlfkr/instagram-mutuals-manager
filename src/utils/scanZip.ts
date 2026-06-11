@@ -15,9 +15,10 @@ const restrictedPattern = /restricted_profiles(?:_(\d+))?\.json$/i;
 const preferredDir = 'connections/followers_and_following/';
 
 function scorePath(path: string) {
+  const normalized = path.toLowerCase();
   let score = 0;
-  if (path.includes('followers_and_following')) score += 2;
-  if (path.includes('connections')) score += 1;
+  if (normalized.includes('followers_and_following')) score += 2;
+  if (normalized.includes('connections')) score += 1;
   return score;
 }
 

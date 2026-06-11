@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import JSZip from 'jszip';
-import { scanZip } from '../utils/scanZip';
+import { scanFolderFiles, scanZip } from '../utils/scanZip';
 
 describe('scanZip', () => {
   it('prefers canonical connections path even with top-level folder prefix', async () => {
@@ -87,5 +87,51 @@ describe('scanZip', () => {
     expect(result.followingFiles).toEqual([
       'export-a/connections/followers_and_following/following.json'
     ]);
+  });
+
+  it('scores canonical relationship paths case-insensitively', async () => {
+    const zip = new JSZip();
+    zip.file('export/Connections/Followers_And_Following/followers_1.json', '[]');
+    zip.file('export/Connections/Followers_And_Following/following.json', '[]');
+    zip.file('export/random/followers_1.json', '[]');
+    zip.file('export/random/following.json', '[]');
+
+    const result = await scanZip(zip);
+
+    expect(result.followersFiles).toEqual([
+      'export/Connections/Followers_And_Following/followers_1.json'
+    ]);
+    expect(result.followingFiles).toEqual([
+      'export/Connections/Followers_And_Following/following.json'
+    ]);
+  });
+
+  it('keeps folder uploads scoped to one export root', () => {
+    const files = [
+      new File(['[]'], 'followers_1.json', { type: 'application/json' }),
+      new File(['[]'], 'following.json', { type: 'application/json' }),
+      new File(['[]'], 'followers_1.json', { type: 'application/json' }),
+      new File(['[]'], 'following.json', { type: 'application/json' }),
+      new File(['[]'], 'blocked_profiles.json', { type: 'application/json' })
+    ];
+    [
+      'export-a/connections/followers_and_following/followers_1.json',
+      'export-a/connections/followers_and_following/following.json',
+      'export-b/connections/followers_and_following/followers_1.json',
+      'export-b/connections/followers_and_following/following.json',
+      'export-b/connections/followers_and_following/blocked_profiles.json'
+    ].forEach((path, index) => {
+      Object.defineProperty(files[index], 'webkitRelativePath', { value: path });
+    });
+
+    const result = scanFolderFiles(files);
+
+    expect(result.followersFiles.map((file) => file.webkitRelativePath)).toEqual([
+      'export-a/connections/followers_and_following/followers_1.json'
+    ]);
+    expect(result.followingFiles.map((file) => file.webkitRelativePath)).toEqual([
+      'export-a/connections/followers_and_following/following.json'
+    ]);
+    expect(result.blockedFiles).toEqual([]);
   });
 });
