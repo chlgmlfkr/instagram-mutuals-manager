@@ -169,6 +169,32 @@ describe('analyzeInstagramExport', () => {
     ]);
   });
 
+  it('analyzes relationship exports that only contain nested href entries', async () => {
+    const zipFile = await zipFileFromEntries({
+      'export/connections/followers_and_following/followers_1.json': {
+        relationships_followers: [
+          { href: 'https://www.instagram.com/alice/' },
+          { href: 'https://www.instagram.com/casey/' }
+        ]
+      },
+      'export/connections/followers_and_following/following.json': {
+        relationships_following: [
+          { href: 'https://www.instagram.com/alice/' },
+          { href: 'https://www.instagram.com/bob/' }
+        ]
+      }
+    });
+
+    const result = await analyzeInstagramExport(zipFile, []);
+
+    expect(result.stats.followersCount).toBe(2);
+    expect(result.stats.followingCount).toBe(2);
+    expect(result.results.mutuals).toEqual(['alice']);
+    expect(result.results.unfollowers).toEqual(['bob']);
+    expect(result.results.fans).toEqual(['casey']);
+    expect(result.stats.skipCount).toBe(0);
+  });
+
   it('includes blocked and restricted skips in stats', async () => {
     const folderFiles = [
       jsonFile('followers_1.json', [{ string_list_data: [{ value: 'alice' }] }]),

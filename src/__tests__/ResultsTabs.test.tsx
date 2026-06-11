@@ -59,7 +59,7 @@ describe('ResultsTabs', () => {
     expect(container.textContent).toContain('@bob');
     expect(container.textContent).not.toContain('@casey');
 
-    clickButton('언팔로우');
+    clickButton('나를 팔로우함');
     expect(container.textContent).toContain('@casey');
     expect(container.textContent).not.toContain('@bob');
 

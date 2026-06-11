@@ -72,7 +72,7 @@ export default function ExpandableAnalysis({
             <DistributionBar label="팔로워" value={followers.length} total={relationshipTotal} tone="bg-slate-400" />
             <DistributionBar label="맞팔" value={mutuals.length} total={relationshipTotal} tone="bg-emerald-500" />
             <DistributionBar label="언팔로워 후보" value={unfollowers.length} total={relationshipTotal} tone="bg-[#e1306c]" />
-            <DistributionBar label="언팔로우" value={fans.length} total={relationshipTotal} tone="bg-amber-500" />
+            <DistributionBar label="나를 팔로우함" value={fans.length} total={relationshipTotal} tone="bg-amber-500" />
             <DistributionBar label="제한" value={restricted.length} total={relationshipTotal} tone="bg-orange-400" />
             <DistributionBar label="차단" value={blocked.length} total={relationshipTotal} tone="bg-rose-500" />
           </div>

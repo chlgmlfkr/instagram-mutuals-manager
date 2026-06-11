@@ -37,7 +37,7 @@ const tabs: TabDefinition[] = [
   },
   {
     key: 'fans',
-    label: '언팔로우',
+    label: '나를 팔로우함',
     accent: 'text-amber-600',
     description: '상대는 나를 팔로우하고 있지만, 나는 상대를 팔로우하지 않은 상태입니다.'
   },

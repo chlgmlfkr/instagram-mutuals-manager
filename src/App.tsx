@@ -144,21 +144,21 @@ export default function App() {
             </div>
           </header>
 
-          <section className="grid flex-1 items-start gap-8 py-8 lg:grid-cols-[minmax(0,1fr)_460px] lg:items-center lg:gap-16 lg:py-12">
+          <section className="grid flex-1 items-start gap-6 py-6 lg:grid-cols-[minmax(0,1fr)_460px] lg:items-center lg:gap-16 lg:py-12">
             <div className="max-w-3xl">
-              <div className="mb-5 inline-flex rounded-full border border-rose-200 bg-white px-4 py-2 text-sm font-semibold text-[#e1306c] sm:mb-7">
+              <div className="mb-4 inline-flex rounded-full border border-rose-200 bg-white px-4 py-2 text-sm font-semibold text-[#e1306c] sm:mb-7">
                 언팔로워 후보를 먼저 보여줍니다
               </div>
-              <h1 className="text-4xl font-semibold leading-[1.06] tracking-normal text-slate-950 sm:text-5xl lg:text-[56px]">
+              <h1 className="text-3xl font-semibold leading-[1.06] tracking-normal text-slate-950 sm:text-5xl lg:text-[56px]">
                 인스타 언팔로워
                 <br />
                 후보를 확인하세요.
               </h1>
-              <p className="mt-5 max-w-2xl text-base leading-7 text-slate-600 sm:text-lg sm:leading-8">
+              <p className="mt-4 max-w-2xl text-base leading-7 text-slate-600 sm:mt-5 sm:text-lg sm:leading-8">
                 Instagram에서 받은 내보내기 ZIP을 브라우저에서만 분석합니다. 로그인도 서버 업로드도
                 없이, 내가 팔로우하지만 나를 팔로우하지 않는 계정을 먼저 확인합니다.
               </p>
-              <div className="mt-7 flex flex-wrap gap-3 text-sm font-semibold text-slate-700">
+              <div className="mt-7 hidden flex-wrap gap-3 text-sm font-semibold text-slate-700 sm:flex">
                 <span className="rounded-full border border-slate-200 bg-white px-4 py-2">ZIP 우선 지원</span>
                 <span className="rounded-full border border-slate-200 bg-white px-4 py-2">로그인 불필요</span>
                 <span className="rounded-full border border-slate-200 bg-white px-4 py-2">CSV 내보내기</span>
@@ -255,7 +255,7 @@ export default function App() {
                         </span>
                       </div>
                       <div className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-                        {['언팔로워 후보', '언팔로우', '맞팔', '팔로워'].map((label) => (
+                        {['언팔로워 후보', '나를 팔로우함', '맞팔', '팔로워'].map((label) => (
                           <div key={label} className="rounded-lg border border-dashed border-slate-200 bg-slate-50 p-4">
                             <p className="text-sm font-semibold text-slate-700">{label}</p>
                             <p className="mt-2 text-xs leading-5 text-slate-500">

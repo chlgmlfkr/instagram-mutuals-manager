@@ -140,6 +140,12 @@ export default function Uploader({
             ? '파일 선택 완료. 아래 버튼을 누르면 분석이 시작됩니다.'
             : '먼저 ZIP 또는 폴더를 선택하면 분석 버튼이 활성화됩니다.'}
         </div>
+        <a
+          href="/privacy.html"
+          className="mt-3 inline-flex text-xs font-semibold text-blue-700 underline-offset-4 hover:underline"
+        >
+          개인정보 안내 보기
+        </a>
         <button
           type="button"
           className="btn-brand mx-auto mt-4 min-h-14 w-full max-w-[280px] text-base"

@@ -31,7 +31,7 @@ export default function AnalysisStatusPanel({
             help: '나는 팔로우하지만 상대는 나를 팔로우하지 않음'
           },
           {
-            label: '언팔로우',
+            label: '나를 팔로우함',
             value: results.fans.length,
             tone: 'text-amber-600',
             help: '상대는 나를 팔로우하지만 나는 팔로우하지 않음'
@@ -83,7 +83,7 @@ export default function AnalysisStatusPanel({
           <p className="mt-1 text-sm text-slate-500">
             {status === 'done'
               ? '분석 기준은 Instagram 내보내기 파일 생성 시점입니다. 후보 목록을 먼저 확인하세요.'
-              : '왼쪽에서 ZIP 파일을 선택한 뒤 분석 시작 버튼을 누르면 됩니다.'}
+              : 'ZIP 파일을 선택한 뒤 분석 시작 버튼을 누르면 됩니다.'}
           </p>
         </div>
         <div
