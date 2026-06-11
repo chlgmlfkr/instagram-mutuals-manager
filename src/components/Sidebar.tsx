@@ -20,7 +20,7 @@ export default function Sidebar({
   onAnalyze
 }: SidebarProps) {
   return (
-    <aside className="border-b border-slate-200 bg-white p-4 lg:border-b-0 lg:border-r lg:p-5">
+    <aside className="border-b border-slate-200 bg-white p-4 lg:border-b-0 lg:border-r lg:p-4">
       <div className="space-y-4 lg:sticky lg:top-[76px]">
         <Uploader
           zipFile={zipFile}
@@ -32,11 +32,11 @@ export default function Sidebar({
           disabled={!canAnalyze}
         />
 
-        <section className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-slate-400">
+        <section className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-400">
             Local Trust
           </p>
-          <p className="mt-3 text-sm font-semibold text-slate-900">브라우저 안에서만 처리</p>
+          <p className="mt-3 text-sm font-semibold text-slate-950">브라우저 안에서만 처리</p>
           <ul className="mt-3 space-y-2 text-sm leading-6 text-slate-500">
             <li>업로드 파일은 서버로 전송하지 않습니다.</li>
             <li>로그인 정보나 세션 쿠키를 요구하지 않습니다.</li>

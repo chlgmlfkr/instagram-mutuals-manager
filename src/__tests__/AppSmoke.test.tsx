@@ -45,15 +45,15 @@ describe('App smoke flow', () => {
       root.render(<App />);
     });
 
-    expect(container.textContent).toContain('서버 전송 없이 브라우저에서만 분석');
-    expect(container.textContent).toContain('인스타 맞팔 관계를');
+    expect(container.textContent).toContain('브라우저 로컬 분석');
+    expect(container.textContent).toContain('인스타 언팔로워');
     expect(container.textContent).toContain('폴더 업로드');
     expect(container.textContent).toContain('분석 시작');
-    expect(container.textContent).toContain('가이드라인 및 안내사항');
+    expect(container.textContent).toContain('다운로드 가이드');
     expect(container.textContent).not.toContain('드리블 스타일');
 
     const guideButton = Array.from(container.querySelectorAll('button')).find(
-      (button) => button.textContent === '가이드라인 및 안내사항'
+      (button) => button.textContent === '다운로드 가이드'
     );
     if (!guideButton) throw new Error('Guide tab button not found');
 
@@ -132,10 +132,11 @@ describe('App smoke flow', () => {
       analyzeButton.click();
     });
 
-    expect(container.textContent).toContain('분석 결과 요약');
+    expect(container.textContent).toContain('언팔로워 후보 요약');
     expect(container.textContent).toContain('언팔로워 후보');
     expect(container.textContent).toContain('맞팔');
     expect(container.textContent).toContain('@bob');
+    expect(container.textContent).toContain('관계 분석 보기');
     expect(container.textContent).not.toContain('신규/변동');
   });
 
@@ -161,7 +162,7 @@ describe('App smoke flow', () => {
 
     expect(container.textContent).toContain('export.zip');
 
-    const dropZone = Array.from(container.querySelectorAll('[aria-label="ZIP 파일 드롭 영역"]')).at(0);
+    const dropZone = Array.from(container.querySelectorAll('[aria-label="ZIP 파일 드롭 영역"]'))[0];
     if (!dropZone) throw new Error('ZIP drop zone not found');
 
     const rejectedDrop = new Event('drop', { bubbles: true, cancelable: true });

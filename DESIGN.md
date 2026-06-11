@@ -2,7 +2,7 @@
 
 ## Source of truth
 - Status: Active draft
-- Last refreshed: 2026-05-14
+- Last refreshed: 2026-06-11
 - Primary product surfaces: first-run upload gate, analyze workspace, download guide, status summary, parsed-file diagnostics, relationship lists, CSV/copy actions.
 - Evidence reviewed:
   - `README.md`: local-only Instagram export analyzer, no login/API/crawling, no server upload/storage, ZIP/folder support, result tabs, search/copy/CSV.
@@ -14,7 +14,7 @@
   - `src/components/AnalysisStatusPanel.tsx`: status, counts, source type, parse quality, error state.
   - `src/components/ResultsTabs.tsx` and `src/components/ListView.tsx`: tabbed relationship ledger, search, sort, copy, CSV export.
   - `src/index.css` and `tailwind.config.js`: React + Vite + Tailwind, light mode, slate/white panels, warm amber/rose accents, high-radius card system, no external font import.
-  - External reference: VoltAgent `awesome-design-md`, especially Linear, Airtable, Intercom, Notion, Cal.com, and Vercel style documents.
+- External reference: getdesign.md, especially Apple, Cal.com, Airtable, Meta, Pinterest/Instagram red-accent patterns.
 
 ## Style candidates reviewed
 - Linear: excellent precision, restrained accent use, dense product-tool credibility. Pure dark marketing canvas is rejected because this app is a repeated-use dashboard, not a developer-product landing page.
@@ -23,11 +23,17 @@
 - Notion: useful for quiet workspace affordances and document-like guidance. Illustration-heavy warmth is rejected because this app should foreground file analysis evidence.
 - Vercel/Cal.com: useful for precise black/white controls, compact navigation, and production-grade restraint. Overly stark monochrome is rejected because Instagram export analysis benefits from warm privacy cues and risk states.
 
-Chosen direction: **Brand Gate -> Operational Ledger**. The first visit should feel like a strong, unmistakable product surface with one dominant coral-red theme, a short explanation, upload controls, and a guide button. After a file is selected or analysis begins, the app should shift into a private desktop-grade workspace for inspecting sensitive relationship data: clean, compact, trustworthy, repeatable, and fast to scan.
+Chosen direction: **Private Export Console**. The product should feel like a private Instagram export analyzer, not an Instagram clone, growth tool, or red marketing hero. The style mix is Cal.com 40% for clean neutral tool surfaces, Apple 25% for premium white space and calm first impression, Airtable 20% for structured data lists and metrics, Meta 10% for trust-oriented blue CTAs, and Pinterest/Instagram red 5% for unfollower/risk emphasis only.
 
 ## Brand
 - Personality: quiet, exact, local-first, privacy-literate, practical. It should read closer to Linear/Airtable operations software than to Instagram growth tooling.
 - Trust signals: explicit local-only badges, used-file diagnostics, parser quality notes, clear disabled states, no login/API/crawling language, stable result counts, reversible export actions.
+- Naming candidate:
+  - Official product name: `ISeeSocial`.
+  - Domain candidate: `isee.social` if available.
+  - Korean alias: `아시셜`.
+  - Rationale: "I see social" matches the product promise of inspecting user-owned social export data locally.
+  - Risk: `아시셜` can sound like `asocial` in English, so use `ISeeSocial` as the official mark and `아시셜` as a Korean reading.
 - Avoid:
   - Landing-page hero sections, marketing promises, influencer-growth language, vanity metrics, and dark cinematic SaaS drama.
   - Overly playful Instagram gradients as the main system. Warm accents are allowed, but relationship data must stay sober.
@@ -37,6 +43,7 @@ Chosen direction: **Brand Gate -> Operational Ledger**. The first visit should f
 ## Product goals
 - Goals:
   - Let users analyze Instagram export ZIP/folder files locally with minimum uncertainty.
+  - Make `언팔로워 후보 확인` the first-session job; broader relationship analysis is secondary and optional.
   - Make the current input source, parse status, used files, skipped entries, and result categories obvious.
   - Support repeated inspection workflows: upload, analyze, verify, search, sort, copy, export CSV, rerun with another export.
   - Preserve user trust by making privacy constraints visible but not noisy.
@@ -46,8 +53,49 @@ Chosen direction: **Brand Gate -> Operational Ledger**. The first visit should f
   - No decorative visualization that weakens auditability.
 - Success signals:
   - First-time users can identify the next action in under 5 seconds.
+  - Done state shows `언팔로워 후보` before broader relationship analysis.
   - Returning users can compare counts, find a username, and export a category without reading instructions.
   - Errors explain what file/source failed and how to diagnose it.
+
+## Product, launch, and monetization plan
+- Current product order:
+  1. `getdesign.md`-style design rules are consolidated in this file.
+  2. First screen and result defaults focus on `언팔로워 후보 확인`.
+  3. Result table, search, sort, copy, CSV, and diagnostics stay ahead of charts.
+  4. Relationship analysis remains collapsed and optional until the user asks for it.
+  5. Privacy, unofficial-service notice, and local-analysis copy must be visible before public launch.
+- Differentiation from Toollyst:
+  - Borrow the calm density and short upload flow.
+  - Do not copy the black table, Instagram/Threads tab treatment, or ad-heavy result feel.
+  - Differentiate through local trust, parser diagnostics, CSV/list operations, and optional relationship visualization.
+- First deploy target:
+  - Use Cloudflare Pages first.
+  - Build command: `npm run build`.
+  - Build output: `dist`.
+  - Vercel is the second-choice fallback; GitHub Pages is acceptable only for a very basic static release.
+- Public launch prerequisites:
+  - `public/robots.txt`, `public/sitemap.xml`, Cloudflare Pages `_headers`/`_redirects`, and Open Graph metadata/image.
+  - Privacy page or section that says files, filenames, usernames, raw export content, and result lists are not collected.
+  - `Instagram/Meta 공식 서비스가 아님` notice in header/footer or guide/privacy surfaces.
+  - Desktop and mobile smoke test with a real ZIP after preview deployment.
+- Monetization sequence:
+  1. Stabilize design and unfollower-first correctness.
+  2. Add minimum relationship distribution visualization.
+  3. Publish guide/content surfaces for export download, result interpretation, wrong-looking results, and privacy.
+  4. Add ad placeholders only.
+  5. Add real AdSense/Kakao AdFit scripts only after content, trust copy, and layout are stable.
+- Allowed ad positions:
+  - Guide top or bottom.
+  - Result page bottom.
+  - Desktop-only right auxiliary rail after the core result layout is stable.
+- Forbidden ad positions:
+  - Upload area, analyze button area, error/diagnostic messages, result table rows, and the gap between summary and first result table.
+- SEO content targets:
+  - `인스타 언팔로워 확인`.
+  - `인스타 맞팔 확인`.
+  - `인스타그램 내보내기`.
+  - `인스타 데이터 다운로드`.
+  - `인스타 팔로워 json`.
 
 ## Personas and jobs
 - Primary personas:
@@ -94,15 +142,14 @@ Chosen direction: **Brand Gate -> Operational Ledger**. The first visit should f
 
 ## Visual language
 - Color:
-  - First-run brand screen: dominant coral red `#d7372f`, white foreground, and restrained translucent chips. This screen should contain only the app explanation, upload card, and guide button.
-  - Canvas: warm off-white `#f7f4ef` / `#fbfaf8`, with white cards for active work surfaces.
-  - Ink: slate-black `#0f172a` for primary text, `#475569` for secondary, `#94a3b8` for metadata.
-  - Borders: `#e2e8f0` for default hairlines, `#cbd5e1` for stronger separators.
-  - Primary action: near-black `#0f172a`, not purple or Instagram pink.
-  - Attention: amber `#d97706` / `#f59e0b` for non-critical parse warnings and "fans"/incoming-only states.
-  - Risk/error: rose `#e11d48` / `#fb7185` for failures, blocked/restricted emphasis, and outgoing-only mismatch.
+  - Canvas: off-white `#f7f7f5` / `#fafafa`, with white cards for active work surfaces.
+  - Ink: `#111827` for primary text, `#4b5563` for secondary, `#94a3b8` for metadata.
+  - Borders: `#e5e7eb` for default hairlines, `#cbd5e1` for stronger separators.
+  - Primary action: Meta-inspired blue `#2563eb`, hover `#1d4ed8`.
+  - Risk/unfollower accent: Instagram/Pinterest red `#e1306c` or legacy coral `#d7372f`, only for unfollower/risk emphasis.
+  - Attention: amber `#d97706` for non-critical parse warnings and "fans"/incoming-only states.
   - Privacy/success: restrained green `#16a34a` only when a process is complete or verified.
-  - Avoid large saturated gradients. If a warm background exists, keep it outside the main data panels.
+  - Avoid full-screen coral hero treatment, large saturated gradients, and Toollyst-like black table cloning.
 - Typography:
   - Korean UI should use a locally available or self-hosted Korean sans such as `Pretendard` when assets are allowed.
   - Until font assets are added, keep the existing local/system stack to preserve the no-network privacy posture.
@@ -115,9 +162,9 @@ Chosen direction: **Brand Gate -> Operational Ledger**. The first visit should f
   - Panels use 16-24px internal padding; dense list rows use 12-14px vertical padding.
   - Section gaps should be stable and modest; repeated dashboards should not require long scrolling before results.
 - Shape/radius/elevation:
-  - Standard controls: 8-12px radius.
-  - Repeated data cards: 12-16px radius.
-  - Large workspace shells can use 20-24px radius, but avoid escalating every nested panel to 28-30px.
+  - Primary pill CTAs may use full radius; utility buttons use 8px.
+  - Cards and panels use 12px radius.
+  - Data rows use 8px radius or square table rhythm.
   - Prefer hairline borders and subtle shadows over floating glossy cards.
 - Motion:
   - Use short 120-180ms transitions for hover, focus, tab changes, and drag-over state.
@@ -126,7 +173,7 @@ Chosen direction: **Brand Gate -> Operational Ledger**. The first visit should f
 - Imagery/iconography:
   - No stock imagery, influencer photos, or Instagram feed mockups.
   - Use simple functional icons when an icon library is introduced: upload, folder, shield, file, search, copy, download, alert, check.
-  - Lettermark `IM` is acceptable as a compact utility mark; do not overbrand it.
+  - Lettermark should shift from `IM` to `IS` to match `ISeeSocial`; do not overbrand it.
 
 ## Components
 - Existing components to reuse:
@@ -138,7 +185,8 @@ Chosen direction: **Brand Gate -> Operational Ledger**. The first visit should f
   - `ResultsTabs`: category navigation with counts.
   - `ListView`: searchable/exportable relationship ledger.
 - New/changed components:
-  - Future work may add a compact `PrivacyBadge`, `StatusBadge`, `MetricCard`, `SourceFileRow`, and `EmptyState`, but only if duplication appears.
+  - `ExpandableAnalysis`: collapsed relationship analysis below the primary results table.
+  - Future work may add a compact `TrustBadge`, `MetricCard`, `SourceFileRow`, and `EmptyState`, but only if duplication appears.
   - Do not add a separate design-system package for this small app.
 - Variants and states:
   - Buttons: primary, secondary/outline, quiet icon button, danger only when destructive actions exist.
@@ -224,7 +272,7 @@ Chosen direction: **Brand Gate -> Operational Ledger**. The first visit should f
   - No icon library currently installed; do not add dependencies solely for decoration.
 - Design-token constraints:
   - Existing Tailwind extensions include ink, neon, magenta, and sunset tokens, but current UI mostly uses slate, amber, rose, and warm neutrals.
-  - Before adding new tokens, consolidate around the Operational Ledger palette above.
+  - Before adding new tokens, consolidate around the Private Export Console palette above.
   - Keep `src/index.css` component classes limited to durable primitives.
 - Performance constraints:
   - ZIP analysis may be memory-sensitive; do not add heavy visual libraries to the critical path.

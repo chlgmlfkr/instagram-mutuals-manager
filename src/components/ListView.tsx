@@ -90,7 +90,7 @@ export default function ListView({ title, items, accent, description, emptyMessa
   };
 
   return (
-    <div className="flex min-h-0 flex-col rounded-2xl border border-slate-200 bg-white p-4">
+    <div className="flex min-h-0 flex-col rounded-xl border border-slate-200 bg-white p-4">
       <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 pb-4">
         <div className="min-w-0">
           <p className={`text-lg font-semibold ${accent}`}>{title}</p>
@@ -133,7 +133,7 @@ export default function ListView({ title, items, accent, description, emptyMessa
             value={query}
             onChange={(event) => setQuery(event.target.value)}
             placeholder="검색"
-            className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-800 placeholder:text-slate-400 focus:border-amber-300 focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-200"
+            className="w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-800 placeholder:text-slate-400 focus:border-blue-300 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-100"
           />
         </div>
         <label htmlFor={sortId} className="flex items-center gap-2 text-xs text-slate-500">
@@ -142,7 +142,7 @@ export default function ListView({ title, items, accent, description, emptyMessa
             type="checkbox"
             checked={sortAZ}
             onChange={(event) => setSortAZ(event.target.checked)}
-            className="h-4 w-4 accent-amber-500"
+            className="h-4 w-4 accent-blue-600"
           />
           A-Z 정렬
         </label>
@@ -177,7 +177,7 @@ export default function ListView({ title, items, accent, description, emptyMessa
         ) : (
           <ul className="divide-y divide-slate-200/80">
             {filtered.map((user) => (
-              <li key={user} className="flex min-w-0 items-center justify-between gap-3 px-4 py-3 text-sm">
+              <li key={user} className="flex min-h-12 min-w-0 items-center justify-between gap-3 px-4 py-2.5 text-sm">
                 <div className="flex min-w-0 flex-1 items-center gap-3">
                   <input
                     type="checkbox"
@@ -190,13 +190,13 @@ export default function ListView({ title, items, accent, description, emptyMessa
                     href={`https://instagram.com/${user}`}
                     target="_blank"
                     rel="noreferrer"
-                    className="min-w-0 truncate font-medium text-slate-700 transition hover:text-amber-600 focus:outline-none focus:ring-2 focus:ring-amber-200"
+                    className="min-w-0 truncate font-medium text-slate-700 transition hover:text-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-100"
                     aria-label={`${user} Instagram 프로필 열기`}
                   >
                     @{user}
                   </a>
                 </div>
-                <span className="shrink-0 rounded-full bg-white px-2.5 py-1 text-[11px] font-medium text-slate-400">
+                <span className="shrink-0 rounded-full bg-white px-2.5 py-1 text-[11px] font-medium text-slate-400 ring-1 ring-slate-200">
                   Instagram
                 </span>
               </li>

@@ -11,14 +11,14 @@ export default function AppHeader({ activeMainTab, onTabChange }: AppHeaderProps
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div className="flex min-w-0 items-center gap-3">
           <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-slate-900 text-sm font-bold text-white">
-            IM
+            IS
           </div>
           <div className="min-w-0">
-            <h1 className="truncate text-lg font-semibold text-slate-900 sm:text-xl">
-              Instagram 맞팔 분석 워크스페이스
+            <h1 className="truncate text-lg font-semibold text-slate-950 sm:text-xl">
+              ISeeSocial
             </h1>
             <p className="mt-0.5 text-xs text-slate-500 sm:text-sm">
-              ZIP을 로컬에서 분석하고 결과를 검색, 선택, 내보내기합니다.
+              인스타 언팔로워 후보를 로컬에서 확인하고 검색, 선택, 내보내기합니다.
             </p>
           </div>
         </div>
@@ -32,7 +32,7 @@ export default function AppHeader({ activeMainTab, onTabChange }: AppHeaderProps
             aria-pressed={activeMainTab === 'analyze'}
             className={`rounded-full px-4 py-2 text-sm font-semibold transition ${
               activeMainTab === 'analyze'
-                ? 'bg-slate-900 text-white'
+                ? 'bg-[#2563eb] text-white'
                 : 'border border-slate-200 bg-white text-slate-500 hover:text-slate-800'
             }`}
             onClick={() => onTabChange('analyze')}
@@ -44,7 +44,7 @@ export default function AppHeader({ activeMainTab, onTabChange }: AppHeaderProps
             aria-pressed={activeMainTab === 'guide'}
             className={`rounded-full px-4 py-2 text-sm font-semibold transition ${
               activeMainTab === 'guide'
-                ? 'bg-slate-900 text-white'
+                ? 'bg-[#2563eb] text-white'
                 : 'border border-slate-200 bg-white text-slate-500 hover:text-slate-800'
             }`}
             onClick={() => onTabChange('guide')}

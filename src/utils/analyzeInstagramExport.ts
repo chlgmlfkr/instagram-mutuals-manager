@@ -98,7 +98,7 @@ export async function analyzeInstagramExport(
   let usedRestrictedFiles = restrictedFiles;
   let sourceFileList = fileList;
 
-  if (followersFiles.length > 0 && followingFiles.length > 0) {
+  if (zip && followersFiles.length > 0 && followingFiles.length > 0) {
     [followersEntries, followingEntries, blockedEntries, restrictedEntries] = await Promise.all([
       loadEntriesFromPaths(zip, followersFiles, sourceFileList),
       loadEntriesFromPaths(zip, followingFiles, sourceFileList),

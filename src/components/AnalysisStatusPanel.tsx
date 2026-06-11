@@ -27,7 +27,7 @@ export default function AnalysisStatusPanel({
           {
             label: '언팔로워 후보',
             value: results.unfollowers.length,
-            tone: 'text-rose-600',
+            tone: 'text-[#e1306c]',
             help: '나는 팔로우하지만 상대는 나를 팔로우하지 않음'
           },
           {
@@ -71,18 +71,18 @@ export default function AnalysisStatusPanel({
         ];
 
   return (
-    <section className="rounded-xl border border-slate-200 bg-white p-5">
+    <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
-          <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-slate-400">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-400">
             Analysis Status
           </p>
-          <h2 className="mt-2 text-2xl font-semibold text-slate-900">
-            {status === 'done' ? '분석 결과 요약' : '파일을 선택하고 분석을 시작하세요'}
+          <h2 className="mt-2 text-2xl font-semibold text-slate-950">
+            {status === 'done' ? '언팔로워 후보 요약' : '파일을 선택하고 분석을 시작하세요'}
           </h2>
           <p className="mt-1 text-sm text-slate-500">
             {status === 'done'
-              ? '언팔 후보, 맞팔, 파싱 품질을 먼저 확인한 뒤 목록에서 검색/선택하세요.'
+              ? '분석 기준은 Instagram 내보내기 파일 생성 시점입니다. 후보 목록을 먼저 확인하세요.'
               : '왼쪽에서 ZIP 파일을 선택한 뒤 분석 시작 버튼을 누르면 됩니다.'}
           </p>
         </div>

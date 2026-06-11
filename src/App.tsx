@@ -117,49 +117,54 @@ export default function App() {
 
   if (activeMainTab === 'analyze' && !hasStartedAnalysis) {
     return (
-      <main className="min-h-screen bg-[#d7372f] text-white">
+      <main className="min-h-screen bg-[#f7f7f5] text-[#111827]">
         <div className="mx-auto flex min-h-screen w-full max-w-7xl flex-col px-5 py-5 sm:px-8 lg:px-10">
-          <header className="flex flex-wrap items-center justify-between gap-3">
+          <header className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-white/90 px-4 py-3 backdrop-blur">
             <div className="flex items-center gap-3">
-              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-white text-sm font-black text-[#d7372f]">
-                IM
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#111827] text-sm font-black text-white">
+                IS
               </div>
               <div>
-                <p className="text-sm font-semibold text-white/80">Instagram Mutuals</p>
-                <p className="text-lg font-bold leading-tight">맞팔관리기</p>
+                <p className="text-sm font-semibold text-slate-500">ISeeSocial</p>
+                <p className="text-lg font-bold leading-tight text-slate-950">아시셜</p>
               </div>
             </div>
-            <button
-              type="button"
-              className="rounded-full border border-white/35 bg-white/10 px-5 py-3 text-sm font-bold text-white backdrop-blur transition hover:bg-white hover:text-[#d7372f]"
-              onClick={() => setActiveMainTab('guide')}
-            >
-              가이드라인 및 안내사항
-            </button>
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1.5 text-xs font-semibold text-emerald-700">
+                서버 미전송
+              </span>
+              <button
+                type="button"
+                className="rounded-full border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-600 transition hover:border-slate-300 hover:text-slate-950"
+                onClick={() => setActiveMainTab('guide')}
+              >
+                다운로드 가이드
+              </button>
+            </div>
           </header>
 
-          <section className="grid flex-1 items-start gap-6 py-6 lg:grid-cols-[minmax(0,1fr)_460px] lg:items-center lg:gap-14 lg:py-10">
-            <div className="max-w-2xl">
-              <div className="mb-4 inline-flex rounded-full border border-white/25 bg-white/10 px-4 py-2 text-sm font-semibold text-white/90 sm:mb-6">
-                서버 전송 없이 브라우저에서만 분석
+          <section className="grid flex-1 items-start gap-8 py-8 lg:grid-cols-[minmax(0,1fr)_460px] lg:items-center lg:gap-16 lg:py-12">
+            <div className="max-w-3xl">
+              <div className="mb-5 inline-flex rounded-full border border-rose-200 bg-white px-4 py-2 text-sm font-semibold text-[#e1306c] sm:mb-7">
+                언팔로워 후보를 먼저 보여줍니다
               </div>
-              <h1 className="text-3xl font-black leading-[1.08] tracking-normal sm:text-5xl lg:text-6xl">
-                인스타 맞팔 관계를
+              <h1 className="text-4xl font-semibold leading-[1.06] tracking-normal text-slate-950 sm:text-5xl lg:text-[56px]">
+                인스타 언팔로워
                 <br />
-                파일 하나로 정리하세요.
+                후보를 확인하세요.
               </h1>
-              <p className="mt-4 max-w-xl text-base leading-7 text-white/82 sm:mt-6 sm:text-lg sm:leading-8">
-                Instagram에서 내려받은 ZIP 또는 압축 해제 폴더를 넣으면 맞팔, 언팔 후보, 팔로워 관계를
-                로컬에서 분석합니다. 로그인도, 서버 업로드도 필요 없습니다.
+              <p className="mt-5 max-w-2xl text-base leading-7 text-slate-600 sm:text-lg sm:leading-8">
+                Instagram에서 받은 내보내기 ZIP을 브라우저에서만 분석합니다. 로그인도 서버 업로드도
+                없이, 내가 팔로우하지만 나를 팔로우하지 않는 계정을 먼저 확인합니다.
               </p>
-              <div className="mt-8 hidden flex-wrap gap-3 text-sm font-semibold text-white/90 sm:flex">
-                <span className="rounded-full bg-white/14 px-4 py-2">ZIP / 폴더 지원</span>
-                <span className="rounded-full bg-white/14 px-4 py-2">로그인 불필요</span>
-                <span className="rounded-full bg-white/14 px-4 py-2">CSV 내보내기</span>
+              <div className="mt-7 flex flex-wrap gap-3 text-sm font-semibold text-slate-700">
+                <span className="rounded-full border border-slate-200 bg-white px-4 py-2">ZIP 우선 지원</span>
+                <span className="rounded-full border border-slate-200 bg-white px-4 py-2">로그인 불필요</span>
+                <span className="rounded-full border border-slate-200 bg-white px-4 py-2">CSV 내보내기</span>
               </div>
             </div>
 
-            <div className="rounded-2xl bg-white p-4 text-slate-900 shadow-[0_30px_90px_rgba(69,10,10,0.28)] sm:p-5">
+            <div className="rounded-xl border border-slate-200 bg-white p-4 text-slate-900 shadow-sm sm:p-5">
               <Uploader
                 zipFile={zipFile}
                 folderFiles={folderFiles}
@@ -169,6 +174,7 @@ export default function App() {
                 onAnalyze={handleAnalyze}
                 disabled={!canAnalyze}
                 framed={false}
+                onGuideClick={() => setActiveMainTab('guide')}
               />
             </div>
           </section>
@@ -189,7 +195,7 @@ export default function App() {
             </div>
           </main>
         ) : (
-          <div className="grid flex-1 gap-0 lg:grid-cols-[360px_minmax(0,1fr)]">
+          <div className="grid flex-1 gap-0 lg:grid-cols-[320px_minmax(0,1fr)]">
             <Sidebar
               zipFile={zipFile}
               folderFiles={folderFiles}
@@ -213,19 +219,21 @@ export default function App() {
                   canAnalyze={canAnalyze}
                 />
 
-                <UsedFilesPanel stats={stats} error={error} lastFileList={lastFileList} />
-
                 {status === 'done' ? (
-                  <ResultsTabs
-                    following={results.following}
-                    followers={results.followers}
-                    mutuals={results.mutuals}
-                    unfollowers={results.unfollowers}
-                    fans={results.fans}
-                    blocked={results.blocked}
-                    restricted={results.restricted}
-                  />
+                  <>
+                    <ResultsTabs
+                      following={results.following}
+                      followers={results.followers}
+                      mutuals={results.mutuals}
+                      unfollowers={results.unfollowers}
+                      fans={results.fans}
+                      blocked={results.blocked}
+                      restricted={results.restricted}
+                    />
+                    <UsedFilesPanel stats={stats} error={error} lastFileList={lastFileList} />
+                  </>
                 ) : (
+                  <>
                   <section className="rounded-xl border border-slate-200 bg-white p-6">
                     <div className="flex flex-wrap items-start justify-between gap-3">
                       <div>
@@ -249,6 +257,8 @@ export default function App() {
                       ))}
                     </div>
                   </section>
+                  <UsedFilesPanel stats={stats} error={error} lastFileList={lastFileList} />
+                  </>
                 )}
               </div>
             </main>

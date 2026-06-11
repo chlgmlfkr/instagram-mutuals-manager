@@ -77,7 +77,7 @@ describe('analyzeInstagramExport', () => {
       JSON.stringify([{ string_list_data: [{ value: 'bob' }] }])
     );
     const content = await zip.generateAsync({ type: 'uint8array' });
-    const zipFile = new File([content], 'export.zip', { type: 'application/zip' });
+    const zipFile = new File([content as BlobPart], 'export.zip', { type: 'application/zip' });
 
     const result = await analyzeInstagramExport(zipFile, []);
 
@@ -109,7 +109,7 @@ describe('analyzeInstagramExport', () => {
     const zip = new JSZip();
     zip.file('connections/followers_and_following/profile.json', JSON.stringify({ name: 'alice' }));
     const content = await zip.generateAsync({ type: 'uint8array' });
-    const zipFile = new File([content], 'export.zip', { type: 'application/zip' });
+    const zipFile = new File([content as BlobPart], 'export.zip', { type: 'application/zip' });
 
     await expect(analyzeInstagramExport(zipFile, [])).rejects.toMatchObject({
       name: 'InstagramExportAnalysisError',

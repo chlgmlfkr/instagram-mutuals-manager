@@ -10,6 +10,7 @@ type UploaderProps = {
   onAnalyze: () => void;
   disabled?: boolean;
   framed?: boolean;
+  onGuideClick?: () => void;
 };
 
 export default function Uploader({
@@ -20,7 +21,8 @@ export default function Uploader({
   onZipRejected,
   onAnalyze,
   disabled,
-  framed = true
+  framed = true,
+  onGuideClick
 }: UploaderProps) {
   const [isDragging, setIsDragging] = useState(false);
   const hasInput = zipFile !== null || folderFiles.length > 0;
@@ -49,15 +51,15 @@ export default function Uploader({
   );
 
   return (
-    <div className={framed ? 'rounded-xl border border-slate-200 bg-white p-4' : ''}>
+    <div className={framed ? 'rounded-xl border border-slate-200 bg-white p-4 shadow-sm' : ''}>
       <div className="flex items-start justify-between gap-4">
         <div>
-          <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-slate-400">
-            Upload
+          <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-400">
+            Export File
           </p>
-          <h2 className="mt-2 text-xl font-semibold text-slate-900">내보내기 파일 선택</h2>
+          <h2 className="mt-2 text-xl font-semibold text-slate-950">Instagram ZIP 선택</h2>
           <p className="mt-1 text-sm leading-6 text-slate-500">
-            ZIP 또는 압축 해제 폴더를 선택한 뒤 분석을 시작하세요.
+            ZIP을 먼저 권장합니다. 압축 해제 폴더도 보조로 분석할 수 있습니다.
           </p>
         </div>
         <div className="rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-bold text-emerald-700">
@@ -66,10 +68,10 @@ export default function Uploader({
       </div>
 
       <div
-        className={`mt-5 rounded-lg border-2 border-dashed p-4 transition ${
+        className={`mt-5 rounded-xl border p-4 transition ${
           isDragging
-            ? 'border-[#d7372f] bg-red-50'
-            : 'border-slate-200 bg-slate-50'
+            ? 'border-[#2563eb] bg-blue-50'
+            : 'border-slate-200 bg-white'
         }`}
         aria-label="ZIP 파일 드롭 영역"
         onDragOver={(event) => {
@@ -80,16 +82,28 @@ export default function Uploader({
         onDrop={handleDrop}
       >
         <div className="flex flex-col gap-4">
-          <div className="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-slate-900 text-sm font-semibold text-white">
-            ZIP
+          <div className="flex items-center justify-between gap-3">
+            <div className="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-[#111827] text-sm font-semibold text-white">
+              ZIP
+            </div>
+            <span className="rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700">
+              추천
+            </span>
           </div>
-          <p className="text-lg font-semibold text-slate-900">ZIP 파일 업로드</p>
+          <p className="text-lg font-semibold text-slate-950">내보내기 ZIP 업로드</p>
           <p className="text-sm leading-6 text-slate-500">
             다운로드한 Instagram 내보내기 ZIP을 그대로 넣을 수 있습니다.
           </p>
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-            <label className="btn-outline cursor-pointer">
-              ZIP 선택
+          <div className="rounded-lg border border-slate-200 bg-slate-50">
+            <div className="grid gap-2 border-b border-slate-200 px-4 py-3 text-sm sm:grid-cols-[110px_minmax(0,1fr)]">
+              <span className="font-medium text-slate-500">선택 파일</span>
+              <span className="min-w-0 truncate font-semibold text-slate-800" title={selectedZipLabel}>
+                {selectedZipLabel}
+              </span>
+            </div>
+            <div className="flex flex-col gap-3 px-4 py-3 sm:flex-row sm:items-center">
+            <label className="btn-primary cursor-pointer">
+              ZIP 선택하기
               <input
                 type="file"
                 accept=".zip"
@@ -98,22 +112,27 @@ export default function Uploader({
                 onChange={(event) => onZipChange(event.target.files?.[0] ?? null)}
               />
             </label>
-            <span
-              className="min-w-0 truncate rounded-lg bg-slate-100 px-4 py-3 text-sm text-slate-600 sm:flex-1"
-              title={selectedZipLabel}
-            >
-              {selectedZipLabel}
-            </span>
+            {onGuideClick && (
+              <button type="button" className="btn-outline" onClick={onGuideClick}>
+                다운로드 방법 보기
+              </button>
+            )}
+            </div>
           </div>
         </div>
       </div>
 
-      <div className="mt-4 rounded-lg border border-slate-200 bg-white p-4">
+      <div className="mt-4 rounded-xl border border-slate-200 bg-slate-50 p-4">
         <div className="flex flex-col gap-3">
-          <div className="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-[#d7372f] text-sm font-semibold text-white">
+          <div className="flex items-center justify-between gap-3">
+          <div className="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-white text-xs font-semibold text-slate-700 ring-1 ring-slate-200">
             DIR
           </div>
-          <p className="text-lg font-semibold text-slate-900">폴더 업로드</p>
+          <span className="rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-semibold text-slate-500">
+            보조 옵션
+          </span>
+          </div>
+          <p className="text-base font-semibold text-slate-900">압축 해제 폴더 업로드</p>
           <p className="text-sm leading-6 text-slate-500">
             압축을 풀어둔 Instagram export 폴더를 바로 선택할 수 있습니다.
           </p>
@@ -139,7 +158,19 @@ export default function Uploader({
         </div>
       </div>
 
-      <div className="mt-5 rounded-lg border border-slate-200 bg-slate-50 p-4 text-center">
+      <div className="mt-5 flex flex-wrap gap-2">
+        <span className="rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1.5 text-xs font-semibold text-emerald-700">
+          서버 미전송
+        </span>
+        <span className="rounded-full border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-600">
+          로그인 불필요
+        </span>
+        <span className="rounded-full border border-blue-200 bg-blue-50 px-3 py-1.5 text-xs font-semibold text-blue-700">
+          브라우저 로컬 분석
+        </span>
+      </div>
+
+      <div className="mt-5 rounded-xl border border-slate-200 bg-slate-50 p-4 text-center">
         <div className="mx-auto max-w-sm text-sm leading-6 text-slate-600">
           {hasInput
             ? '파일 선택 완료. 아래 버튼을 누르면 분석이 시작됩니다.'
