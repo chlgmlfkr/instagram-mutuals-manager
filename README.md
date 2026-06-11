@@ -124,6 +124,11 @@ npm run preview
 npm run verify
 ```
 
+권장 Node 버전:
+```bash
+nvm use
+```
+
 배포 준비 파일:
 - `public/robots.txt`
 - `public/sitemap.xml`
@@ -284,6 +289,9 @@ ins/
 - Build command: `npm run build`
 - Output directory: `dist`
 - Project name 후보: `iseesocial`
+- Wrangler config: `wrangler.toml`
+
+런칭 체크리스트는 `docs/launch-checklist.md`에 따로 정리합니다.
 
 ### Cloudflare Pages 수동 배포
 ```bash
