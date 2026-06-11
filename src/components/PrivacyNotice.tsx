@@ -16,6 +16,12 @@ export default function PrivacyNotice({ variant = 'full' }: PrivacyNoticeProps) 
               원본 ZIP, 파일명, 사용자명, 결과 목록은 서버로 전송하지 않습니다. 광고를 붙이더라도 분석
               데이터와 분리합니다.
             </p>
+            <a
+              href="/privacy.html"
+              className="mt-2 inline-flex text-sm font-semibold text-blue-700 hover:text-blue-800"
+            >
+              개인정보 안내 보기
+            </a>
           </div>
           <div className="flex flex-wrap gap-2">
             <span className="rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1.5 text-xs font-semibold text-emerald-700">
@@ -44,6 +50,12 @@ export default function PrivacyNotice({ variant = 'full' }: PrivacyNoticeProps) 
           ISeeSocial은 사용자가 직접 받은 Instagram 내보내기 파일을 브라우저에서만 분석합니다.
           광고를 도입하더라도 파일 내용과 분석 결과를 광고 코드에 넘기지 않는 구조를 유지합니다.
         </p>
+        <a
+          href="/privacy.html"
+          className="mt-2 inline-flex text-sm font-semibold text-blue-700 hover:text-blue-800"
+        >
+          개인정보 안내 보기
+        </a>
       </div>
 
       <div className="mt-4 grid gap-3 md:grid-cols-3">
