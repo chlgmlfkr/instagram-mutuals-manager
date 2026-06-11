@@ -74,6 +74,8 @@ describe('App smoke flow', () => {
 
     expect(container.textContent).toContain('내보내기 설정');
     expect(container.textContent).toContain('JSON (필수)');
+    expect(container.textContent).toContain('인스타그램 내보내기 ZIP 받는 방법');
+    expect(container.querySelector('a[href="/instagram-export-guide.html"]')).not.toBeNull();
   });
 
   it('rejects a folder without JSON files without enabling analysis', () => {

@@ -57,6 +57,14 @@ export default function DownloadGuide() {
             <li>결과가 틀려 보이면 export 생성 시점과 사용 파일 진단을 함께 확인</li>
           </ul>
         </div>
+
+        <div className="mt-5 rounded-lg border border-blue-200 bg-blue-50 p-5 text-sm leading-6 text-blue-700">
+          자세한 단계와 자주 틀리는 설정은{' '}
+          <a href="/instagram-export-guide.html" className="font-semibold text-blue-800 underline">
+            인스타그램 내보내기 ZIP 받는 방법
+          </a>
+          에 정리해 두었습니다.
+        </div>
       </section>
       <PrivacyNotice />
     </div>
