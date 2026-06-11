@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import AnalysisStatusPanel from './components/AnalysisStatusPanel';
 import AppHeader from './components/AppHeader';
 import DownloadGuide from './components/DownloadGuide';
+import PrivacyNotice from './components/PrivacyNotice';
 import ResultsTabs from './components/ResultsTabs';
 import Sidebar from './components/Sidebar';
 import Uploader from './components/Uploader';
@@ -182,6 +183,9 @@ export default function App() {
               />
             </div>
           </section>
+          <div className="pb-8">
+            <PrivacyNotice />
+          </div>
         </div>
       </main>
     );
@@ -238,30 +242,31 @@ export default function App() {
                   </>
                 ) : (
                   <>
-                  <section className="rounded-xl border border-slate-200 bg-white p-6">
-                    <div className="flex flex-wrap items-start justify-between gap-3">
-                      <div>
-                        <p className="text-sm font-semibold text-slate-900">분석 전 미리보기</p>
-                        <p className="mt-1 text-sm text-slate-500">
-                          파일을 분석하면 관계별 목록과 CSV 내보내기 도구가 이 영역에 표시됩니다.
-                        </p>
-                      </div>
-                      <span className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-semibold text-slate-500">
-                        결과 대기 중
-                      </span>
-                    </div>
-                    <div className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-                      {['언팔로워 후보', '언팔로우', '맞팔', '팔로워'].map((label) => (
-                        <div key={label} className="rounded-lg border border-dashed border-slate-200 bg-slate-50 p-4">
-                          <p className="text-sm font-semibold text-slate-700">{label}</p>
-                          <p className="mt-2 text-xs leading-5 text-slate-500">
-                            파일 분석 후 이 영역에서 바로 확인할 수 있습니다.
+                    <section className="rounded-xl border border-slate-200 bg-white p-6">
+                      <div className="flex flex-wrap items-start justify-between gap-3">
+                        <div>
+                          <p className="text-sm font-semibold text-slate-900">분석 전 미리보기</p>
+                          <p className="mt-1 text-sm text-slate-500">
+                            파일을 분석하면 관계별 목록과 CSV 내보내기 도구가 이 영역에 표시됩니다.
                           </p>
                         </div>
-                      ))}
-                    </div>
-                  </section>
-                  <UsedFilesPanel stats={stats} error={error} lastFileList={lastFileList} />
+                        <span className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-semibold text-slate-500">
+                          결과 대기 중
+                        </span>
+                      </div>
+                      <div className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+                        {['언팔로워 후보', '언팔로우', '맞팔', '팔로워'].map((label) => (
+                          <div key={label} className="rounded-lg border border-dashed border-slate-200 bg-slate-50 p-4">
+                            <p className="text-sm font-semibold text-slate-700">{label}</p>
+                            <p className="mt-2 text-xs leading-5 text-slate-500">
+                              파일 분석 후 이 영역에서 바로 확인할 수 있습니다.
+                            </p>
+                          </div>
+                        ))}
+                      </div>
+                    </section>
+                    <PrivacyNotice />
+                    <UsedFilesPanel stats={stats} error={error} lastFileList={lastFileList} />
                   </>
                 )}
               </div>
