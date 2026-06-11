@@ -146,6 +146,10 @@ export default function AnalysisStatusPanel({
                 {status === 'done' ? '완료' : '대기 중'}
               </span>
             </div>
+            <div className="rounded-lg border border-blue-100 bg-blue-50 px-4 py-3 text-xs leading-5 text-slate-600">
+              ISeeSocial은 Instagram 또는 Meta의 공식 서비스가 아니며, 내보내기 파일 생성 시점의
+              데이터만 분석합니다.
+            </div>
           </div>
         </div>
       </div>

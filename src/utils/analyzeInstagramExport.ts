@@ -75,7 +75,16 @@ export async function analyzeInstagramExport(
   zipFile: File | null,
   folderFiles: File[]
 ): Promise<AnalysisOutput> {
-  const zip = zipFile ? await JSZip.loadAsync(zipFile) : null;
+  let zip: JSZip | null = null;
+  if (zipFile) {
+    try {
+      zip = await JSZip.loadAsync(zipFile);
+    } catch {
+      throw new InstagramExportAnalysisError(
+        'ZIP 파일을 읽을 수 없습니다. Instagram에서 받은 내보내기 ZIP인지, 압축이 손상되지 않았는지 확인해 주세요.'
+      );
+    }
+  }
   const { followersFiles, followingFiles, blockedFiles, restrictedFiles, fileList } = zip
     ? await scanZip(zip)
     : {

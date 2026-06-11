@@ -31,6 +31,16 @@ function withRelativePath(file: File, path: string) {
 }
 
 describe('analyzeInstagramExport', () => {
+  it('reports unreadable ZIP files with a user-facing message', async () => {
+    const zipFile = new File(['not-a-real-zip'], 'broken.zip', { type: 'application/zip' });
+
+    await expect(analyzeInstagramExport(zipFile, [])).rejects.toMatchObject({
+      name: 'InstagramExportAnalysisError',
+      message:
+        'ZIP 파일을 읽을 수 없습니다. Instagram에서 받은 내보내기 ZIP인지, 압축이 손상되지 않았는지 확인해 주세요.'
+    } satisfies Partial<InstagramExportAnalysisError>);
+  });
+
   it('supports folder-only analysis when zip input is missing', async () => {
     const folderFiles = [
       jsonFile('connections/followers_and_following/followers_1.json', [

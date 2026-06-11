@@ -162,6 +162,10 @@ export default function App() {
                 <span className="rounded-full border border-slate-200 bg-white px-4 py-2">로그인 불필요</span>
                 <span className="rounded-full border border-slate-200 bg-white px-4 py-2">CSV 내보내기</span>
               </div>
+              <p className="mt-4 max-w-2xl text-sm leading-6 text-slate-500">
+                ISeeSocial은 Instagram 또는 Meta의 공식 서비스가 아니며, 사용자가 직접 받은 내보내기
+                파일만 로컬에서 읽습니다.
+              </p>
             </div>
 
             <div className="rounded-xl border border-slate-200 bg-white p-4 text-slate-900 shadow-sm sm:p-5">

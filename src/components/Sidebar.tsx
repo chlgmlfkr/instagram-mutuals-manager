@@ -41,6 +41,7 @@ export default function Sidebar({
             <li>업로드 파일은 서버로 전송하지 않습니다.</li>
             <li>로그인 정보나 세션 쿠키를 요구하지 않습니다.</li>
             <li>분석 결과는 현재 브라우저 메모리 안에서만 처리됩니다.</li>
+            <li>ISeeSocial은 Instagram 또는 Meta의 공식 서비스가 아닙니다.</li>
           </ul>
         </section>
       </div>

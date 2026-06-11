@@ -50,6 +50,7 @@ describe('App smoke flow', () => {
     expect(container.textContent).toContain('폴더 업로드');
     expect(container.textContent).toContain('분석 시작');
     expect(container.textContent).toContain('다운로드 가이드');
+    expect(container.textContent).toContain('Instagram 또는 Meta의 공식 서비스가 아니며');
     expect(container.textContent).not.toContain('드리블 스타일');
     expect(container.textContent.indexOf('ZIP 선택하기')).toBeLessThan(
       container.textContent.indexOf('분석 시작')
