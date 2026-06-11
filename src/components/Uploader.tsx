@@ -102,21 +102,21 @@ export default function Uploader({
               </span>
             </div>
             <div className="flex flex-col gap-3 px-4 py-3 sm:flex-row sm:items-center">
-            <label className="btn-primary cursor-pointer">
-              ZIP 선택하기
-              <input
-                type="file"
-                accept=".zip"
-                className="hidden"
-                aria-label="ZIP 파일 선택"
-                onChange={(event) => onZipChange(event.target.files?.[0] ?? null)}
-              />
-            </label>
-            {onGuideClick && (
-              <button type="button" className="btn-outline" onClick={onGuideClick}>
-                다운로드 방법 보기
-              </button>
-            )}
+              <label className="btn-primary cursor-pointer">
+                ZIP 선택하기
+                <input
+                  type="file"
+                  accept=".zip"
+                  className="hidden"
+                  aria-label="ZIP 파일 선택"
+                  onChange={(event) => onZipChange(event.target.files?.[0] ?? null)}
+                />
+              </label>
+              {onGuideClick && (
+                <button type="button" className="btn-outline" onClick={onGuideClick}>
+                  다운로드 방법 보기
+                </button>
+              )}
             </div>
           </div>
         </div>

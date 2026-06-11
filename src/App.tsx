@@ -184,7 +184,7 @@ export default function App() {
             </div>
           </section>
           <div className="pb-8">
-            <PrivacyNotice />
+            <PrivacyNotice variant="compact" />
           </div>
         </div>
       </main>
@@ -265,7 +265,7 @@ export default function App() {
                         ))}
                       </div>
                     </section>
-                    <PrivacyNotice />
+                    <PrivacyNotice variant="compact" />
                     <UsedFilesPanel stats={stats} error={error} lastFileList={lastFileList} />
                   </>
                 )}
