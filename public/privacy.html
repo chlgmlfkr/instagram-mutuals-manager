@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ISeeSocial 개인정보 안내</title>
+    <meta
+      name="description"
+      content="ISeeSocial은 Instagram 내보내기 ZIP을 브라우저에서만 분석하며 원본 파일, 사용자명, 결과 목록을 서버로 전송하지 않습니다."
+    />
+    <meta name="robots" content="index,follow" />
+    <style>
+      :root {
+        color: #111827;
+        background: #f7f7f5;
+        font-family:
+          ui-sans-serif,
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          sans-serif;
+      }
+
+      body {
+        margin: 0;
+      }
+
+      main {
+        box-sizing: border-box;
+        width: min(840px, 100%);
+        margin: 0 auto;
+        padding: 40px 20px 56px;
+      }
+
+      a {
+        color: #2563eb;
+        font-weight: 700;
+      }
+
+      .panel {
+        border: 1px solid #e5e7eb;
+        border-radius: 16px;
+        background: #ffffff;
+        padding: 28px;
+        box-shadow: 0 1px 2px rgb(15 23 42 / 0.04);
+      }
+
+      .eyebrow {
+        margin: 0 0 12px;
+        color: #64748b;
+        font-size: 12px;
+        font-weight: 800;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+      }
+
+      h1 {
+        margin: 0;
+        font-size: clamp(32px, 5vw, 48px);
+        line-height: 1.08;
+      }
+
+      h2 {
+        margin: 28px 0 10px;
+        font-size: 20px;
+      }
+
+      p,
+      li {
+        color: #4b5563;
+        font-size: 15px;
+        line-height: 1.75;
+      }
+
+      ul {
+        padding-left: 20px;
+      }
+
+      .badge-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin: 22px 0;
+      }
+
+      .badge {
+        border: 1px solid #bfdbfe;
+        border-radius: 999px;
+        background: #eff6ff;
+        color: #1d4ed8;
+        padding: 8px 12px;
+        font-size: 13px;
+        font-weight: 800;
+      }
+
+      .muted {
+        color: #64748b;
+        font-size: 13px;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <section class="panel">
+        <p class="eyebrow">Privacy Boundary</p>
+        <h1>ISeeSocial 개인정보 안내</h1>
+        <p>
+          ISeeSocial은 사용자가 직접 받은 Instagram 내보내기 ZIP 또는 압축 해제 폴더를
+          브라우저에서만 분석하는 정적 웹앱입니다. 로그인, Instagram 공식 API, 비공식 크롤링,
+          private API를 사용하지 않습니다.
+        </p>
+
+        <div class="badge-row" aria-label="핵심 원칙">
+          <span class="badge">서버 미전송</span>
+          <span class="badge">로그인 불필요</span>
+          <span class="badge">브라우저 로컬 분석</span>
+        </div>
+
+        <h2>수집하지 않는 정보</h2>
+        <ul>
+          <li>업로드한 원본 ZIP 또는 폴더 파일</li>
+          <li>파일명과 파일 내부 JSON 내용</li>
+          <li>Instagram 사용자명, 팔로워/팔로우 목록, 분석 결과 목록</li>
+          <li>선택 복사, CSV 다운로드, 검색어 같은 분석 중 입력값</li>
+        </ul>
+
+        <h2>브라우저에서 처리되는 정보</h2>
+        <p>
+          분석에 필요한 파일 읽기, JSON 파싱, 관계 계산은 사용자의 브라우저 메모리 안에서
+          실행됩니다. 페이지를 새로고침하거나 닫으면 현재 분석 상태는 유지되지 않습니다.
+        </p>
+
+        <h2>광고와 통계</h2>
+        <p>
+          향후 광고나 방문 통계를 도입하더라도 원본 파일, 파일명, 사용자명, 결과 목록을 광고
+          코드나 통계 도구에 넘기지 않는 구조를 유지합니다. 광고는 업로드 영역, 분석 버튼,
+          오류/진단 메시지, 결과 테이블 내부에 배치하지 않습니다.
+        </p>
+
+        <h2>공식 서비스 아님</h2>
+        <p>
+          ISeeSocial은 Instagram 또는 Meta의 공식 서비스가 아닙니다. 결과는 Instagram
+          내보내기 파일 생성 시점의 스냅샷이며, 실제 앱 화면과 차이가 있을 수 있습니다.
+        </p>
+
+        <p class="muted">마지막 업데이트: 2026년 6월 11일</p>
+        <p><a href="/">ISeeSocial로 돌아가기</a></p>
+      </section>
+    </main>
+  </body>
+</html>
