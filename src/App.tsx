@@ -333,17 +333,13 @@ function AnalyzeProgress({ progress, currentStep }: { progress: number; currentS
   );
 }
 
-function AdRail({ side, compact = false }: { side: 'left' | 'right'; compact?: boolean }) {
+function AdRail({ side }: { side: 'left' | 'right' }) {
   return (
     <aside
       className={`hidden xl:block ${side === 'left' ? 'justify-self-start' : 'justify-self-end'}`}
       aria-label={`${side === 'left' ? '왼쪽' : '오른쪽'} 광고 예정 영역`}
     >
-      <div
-        className={`sticky top-24 flex w-full items-center justify-center rounded-2xl border border-dashed border-slate-300 bg-white/55 p-4 text-center text-xs font-semibold uppercase tracking-[0.16em] text-slate-400 ${
-          compact ? 'min-h-[240px]' : 'min-h-[520px]'
-        }`}
-      >
+      <div className="sticky top-24 flex min-h-[520px] w-full items-center justify-center rounded-2xl border border-dashed border-slate-300 bg-white/55 p-4 text-center text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">
         <span>
           AD
           <br />
@@ -357,19 +353,44 @@ function AdRail({ side, compact = false }: { side: 'left' | 'right'; compact?: b
 function PageWithAdRails({
   children,
   maxWidth = 'max-w-5xl',
-  yClass = 'py-10',
-  compactAds = false
+  yClass = 'py-10'
 }: {
   children: ReactNode;
   maxWidth?: string;
   yClass?: string;
-  compactAds?: boolean;
 }) {
   return (
     <div className={`grid w-full grid-cols-1 gap-6 px-5 ${yClass} sm:px-8 xl:grid-cols-[128px_minmax(0,1fr)_128px] 2xl:grid-cols-[180px_minmax(0,1fr)_180px]`}>
-      <AdRail side="left" compact={compactAds} />
+      <AdRail side="left" />
       <div className={`mx-auto w-full ${maxWidth}`}>{children}</div>
-      <AdRail side="right" compact={compactAds} />
+      <AdRail side="right" />
+    </div>
+  );
+}
+
+function SuccessPageShell({ children }: { children: ReactNode }) {
+  return (
+    <div className="relative w-full px-5 pt-0 pb-10 sm:px-8 sm:pt-1 sm:pb-10">
+      <div className="pointer-events-none absolute inset-x-0 top-6 hidden xl:block" aria-hidden="true">
+        <div className="mx-auto grid w-full grid-cols-[128px_minmax(0,1fr)_128px] gap-6 px-5 sm:px-8 2xl:grid-cols-[180px_minmax(0,1fr)_180px]">
+          <div className="flex min-h-[240px] items-center justify-center rounded-2xl border border-dashed border-slate-300 bg-white/55 p-4 text-center text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">
+            <span>
+              AD
+              <br />
+              광고 영역 예정
+            </span>
+          </div>
+          <div />
+          <div className="flex min-h-[240px] items-center justify-center rounded-2xl border border-dashed border-slate-300 bg-white/55 p-4 text-center text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">
+            <span>
+              AD
+              <br />
+              광고 영역 예정
+            </span>
+          </div>
+        </div>
+      </div>
+      <div className="relative z-10 mx-auto w-full max-w-6xl">{children}</div>
     </div>
   );
 }
@@ -701,7 +722,7 @@ export default function App() {
         )}
 
         {viewState === 'success' && (
-          <PageWithAdRails maxWidth="max-w-6xl" yClass="pt-0 pb-10 sm:pt-1 sm:pb-10" compactAds>
+          <SuccessPageShell>
           <section className="success-reveal flex w-full flex-col gap-5">
             <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
               <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
@@ -749,7 +770,7 @@ export default function App() {
             </section>
             <UsedFilesPanel stats={stats} error={error} lastFileList={lastFileList} />
           </section>
-          </PageWithAdRails>
+          </SuccessPageShell>
         )}
       </main>
     );
