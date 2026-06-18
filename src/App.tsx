@@ -83,6 +83,30 @@ function StatCard({
   );
 }
 
+function UnfollowerSummaryCard({ results }: { results: AnalysisResults }) {
+  const unfollowerCount = results.unfollowers.length;
+  const followingCount = results.following.length;
+
+  return (
+    <section className="rounded-2xl border border-rose-100 bg-white p-5 shadow-sm">
+      <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+        <div>
+          <p className="text-sm font-semibold text-[#e1306c]">언팔로워 후보</p>
+          <p className="mt-2 text-5xl font-semibold tabular-nums text-[#e1306c] sm:text-6xl">
+            {unfollowerCount.toLocaleString()}
+          </p>
+          <p className="mt-3 text-sm leading-6 text-slate-500">
+            전체 팔로잉 {followingCount.toLocaleString()}명 중 약 {ratio(unfollowerCount, followingCount)}%입니다.
+          </p>
+        </div>
+        <div className="rounded-xl border border-rose-100 bg-rose-50 px-4 py-3 text-sm leading-6 text-rose-700">
+          먼저 숫자로 규모를 확인한 뒤, 아래 목록에서 계정을 검색·선택·내보내기 할 수 있습니다.
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function BarRow({
   label,
   value,
@@ -309,13 +333,17 @@ function AnalyzeProgress({ progress, currentStep }: { progress: number; currentS
   );
 }
 
-function AdRail({ side }: { side: 'left' | 'right' }) {
+function AdRail({ side, compact = false }: { side: 'left' | 'right'; compact?: boolean }) {
   return (
     <aside
       className={`hidden xl:block ${side === 'left' ? 'justify-self-start' : 'justify-self-end'}`}
       aria-label={`${side === 'left' ? '왼쪽' : '오른쪽'} 광고 예정 영역`}
     >
-      <div className="sticky top-24 flex min-h-[520px] w-full items-center justify-center rounded-2xl border border-dashed border-slate-300 bg-white/55 p-4 text-center text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">
+      <div
+        className={`sticky top-24 flex w-full items-center justify-center rounded-2xl border border-dashed border-slate-300 bg-white/55 p-4 text-center text-xs font-semibold uppercase tracking-[0.16em] text-slate-400 ${
+          compact ? 'min-h-[240px]' : 'min-h-[520px]'
+        }`}
+      >
         <span>
           AD
           <br />
@@ -329,17 +357,19 @@ function AdRail({ side }: { side: 'left' | 'right' }) {
 function PageWithAdRails({
   children,
   maxWidth = 'max-w-5xl',
-  yClass = 'py-10'
+  yClass = 'py-10',
+  compactAds = false
 }: {
   children: ReactNode;
   maxWidth?: string;
   yClass?: string;
+  compactAds?: boolean;
 }) {
   return (
     <div className={`grid w-full grid-cols-1 gap-6 px-5 ${yClass} sm:px-8 xl:grid-cols-[128px_minmax(0,1fr)_128px] 2xl:grid-cols-[180px_minmax(0,1fr)_180px]`}>
-      <AdRail side="left" />
+      <AdRail side="left" compact={compactAds} />
       <div className={`mx-auto w-full ${maxWidth}`}>{children}</div>
-      <AdRail side="right" />
+      <AdRail side="right" compact={compactAds} />
     </div>
   );
 }
@@ -671,7 +701,7 @@ export default function App() {
         )}
 
         {viewState === 'success' && (
-          <PageWithAdRails maxWidth="max-w-6xl" yClass="pt-4 pb-10 sm:pt-5 sm:pb-10">
+          <PageWithAdRails maxWidth="max-w-6xl" yClass="pt-0 pb-10 sm:pt-1 sm:pb-10" compactAds>
           <section className="success-reveal flex w-full flex-col gap-5">
             <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
               <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
@@ -688,6 +718,8 @@ export default function App() {
               </div>
             </div>
 
+            <UnfollowerSummaryCard results={results} />
+
             <ResultsTabs
               following={results.following}
               followers={results.followers}
@@ -698,13 +730,14 @@ export default function App() {
               restricted={results.restricted}
             />
 
-            <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-              <StatCard
-                label="언팔로워 후보"
-                value={results.unfollowers.length}
-                tone="text-[#e1306c]"
-                help={`전체 팔로잉 ${results.following.length.toLocaleString()}명 중 약 ${ratio(results.unfollowers.length, results.following.length)}%`}
-              />
+            <div className="rounded-2xl border border-blue-100 bg-blue-50 p-4 text-sm leading-6 text-blue-800">
+              이 결과는 Instagram 내보내기 파일을 기준으로 계산됩니다. 실시간 Instagram 상태와 다를 수 있으며,
+              비공개 계정·삭제된 계정·데이터 누락에 따라 일부 차이가 생길 수 있습니다.
+            </div>
+
+            <GraphCandidateCards results={results} stats={stats} />
+            <GraphSection results={results} stats={stats} />
+            <section className="grid gap-4 md:grid-cols-3">
               <StatCard label="맞팔" value={results.mutuals.length} help="서로 팔로우 중인 계정" />
               <StatCard label="나를 팔로우함" value={results.fans.length} help="상대는 나를 팔로우하지만 나는 팔로우하지 않음" />
               <StatCard
@@ -714,14 +747,6 @@ export default function App() {
                 help="파싱하지 못했거나 누락된 항목"
               />
             </section>
-
-            <div className="rounded-2xl border border-blue-100 bg-blue-50 p-4 text-sm leading-6 text-blue-800">
-              이 결과는 Instagram 내보내기 파일을 기준으로 계산됩니다. 실시간 Instagram 상태와 다를 수 있으며,
-              비공개 계정·삭제된 계정·데이터 누락에 따라 일부 차이가 생길 수 있습니다.
-            </div>
-
-            <GraphCandidateCards results={results} stats={stats} />
-            <GraphSection results={results} stats={stats} />
             <UsedFilesPanel stats={stats} error={error} lastFileList={lastFileList} />
           </section>
           </PageWithAdRails>

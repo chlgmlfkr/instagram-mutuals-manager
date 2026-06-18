@@ -243,16 +243,16 @@ describe('App smoke flow', () => {
 
     const content = container.textContent ?? '';
     const fileIndex = content.indexOf('현재 분석 파일');
+    const unfollowerSummaryIndex = content.indexOf('전체 팔로잉');
     const listIndex = content.indexOf('계정 목록');
-    const metricHelpIndex = content.indexOf('전체 팔로잉');
     const candidateIndex = content.indexOf('시각화 후보');
     const graphIndex = content.indexOf('팔로우 관계 비율');
     const diagnosticsIndex = content.indexOf('이번 분석에 사용한 파일');
 
     expect(fileIndex).toBeGreaterThanOrEqual(0);
-    expect(listIndex).toBeGreaterThan(fileIndex);
-    expect(metricHelpIndex).toBeGreaterThan(listIndex);
-    expect(candidateIndex).toBeGreaterThan(metricHelpIndex);
+    expect(unfollowerSummaryIndex).toBeGreaterThan(fileIndex);
+    expect(listIndex).toBeGreaterThan(unfollowerSummaryIndex);
+    expect(candidateIndex).toBeGreaterThan(listIndex);
     expect(graphIndex).toBeGreaterThan(candidateIndex);
     expect(diagnosticsIndex).toBeGreaterThan(graphIndex);
   });
