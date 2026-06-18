@@ -240,6 +240,21 @@ describe('App smoke flow', () => {
     expect(container.textContent).not.toContain('개인정보는 어떻게 처리되나요?');
     expect(container.textContent).not.toContain('관계 분석 보기');
     expect(container.textContent).not.toContain('신규/변동');
+
+    const content = container.textContent ?? '';
+    const fileIndex = content.indexOf('현재 분석 파일');
+    const listIndex = content.indexOf('계정 목록');
+    const metricHelpIndex = content.indexOf('전체 팔로잉');
+    const candidateIndex = content.indexOf('시각화 후보');
+    const graphIndex = content.indexOf('팔로우 관계 비율');
+    const diagnosticsIndex = content.indexOf('이번 분석에 사용한 파일');
+
+    expect(fileIndex).toBeGreaterThanOrEqual(0);
+    expect(listIndex).toBeGreaterThan(fileIndex);
+    expect(metricHelpIndex).toBeGreaterThan(listIndex);
+    expect(candidateIndex).toBeGreaterThan(metricHelpIndex);
+    expect(graphIndex).toBeGreaterThan(candidateIndex);
+    expect(diagnosticsIndex).toBeGreaterThan(graphIndex);
   });
 
   it('clears the previous ZIP selection when choosing another ZIP', () => {

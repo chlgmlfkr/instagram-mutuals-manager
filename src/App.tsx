@@ -688,6 +688,16 @@ export default function App() {
               </div>
             </div>
 
+            <ResultsTabs
+              following={results.following}
+              followers={results.followers}
+              mutuals={results.mutuals}
+              unfollowers={results.unfollowers}
+              fans={results.fans}
+              blocked={results.blocked}
+              restricted={results.restricted}
+            />
+
             <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
               <StatCard
                 label="언팔로워 후보"
@@ -712,15 +722,6 @@ export default function App() {
 
             <GraphCandidateCards results={results} stats={stats} />
             <GraphSection results={results} stats={stats} />
-            <ResultsTabs
-              following={results.following}
-              followers={results.followers}
-              mutuals={results.mutuals}
-              unfollowers={results.unfollowers}
-              fans={results.fans}
-              blocked={results.blocked}
-              restricted={results.restricted}
-            />
             <UsedFilesPanel stats={stats} error={error} lastFileList={lastFileList} />
           </section>
           </PageWithAdRails>

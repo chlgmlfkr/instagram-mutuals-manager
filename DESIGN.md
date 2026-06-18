@@ -2,7 +2,7 @@
 
 ## Source of truth
 - Status: Active draft
-- Last refreshed: 2026-06-11
+- Last refreshed: 2026-06-18
 - Primary product surfaces: first-run upload gate, analyze workspace, download guide, status summary, parsed-file diagnostics, relationship lists, CSV/copy actions.
 - Evidence reviewed:
   - `README.md`: local-only Instagram export analyzer, no login/API/crawling, no server upload/storage, ZIP/folder support, result tabs, search/copy/CSV.
@@ -56,6 +56,13 @@ Chosen direction: **Private Export Console**. The product should feel like a pri
   - Done state shows `언팔로워 후보` before broader relationship analysis.
   - Returning users can compare counts, find a username, and export a category without reading instructions.
   - Errors explain what file/source failed and how to diagnose it.
+
+## Completed result hierarchy
+- The completed analysis screen prioritizes direct account-list interaction over dashboard interpretation.
+- Render order: current analyzed file, relationship tabs/account list, metric cards, export-snapshot caveat, visualization candidates, relationship graphs, diagnostics.
+- `ResultsTabs` owns the primary workflow: inspect unfollower candidates, search, select, copy, and export CSV.
+- Metric cards and graph candidates are supporting interpretation, not the first completed-state task.
+- Time-based charts remain out of scope until follow-date parsing is represented reliably in the analyzed result model.
 
 ## Product, launch, and monetization plan
 - Current product order:
@@ -125,9 +132,9 @@ Chosen direction: **Private Export Console**. The product should feel like a pri
 - Content hierarchy:
   - Current task and status first.
   - Input source and local-only reassurance second.
-  - Counts and parse quality third.
-  - Detailed relationship lists last.
-  - Diagnostics should stay visible near summary, not buried after results.
+  - In the completed result state, detailed relationship lists come before counts and charts.
+  - Counts, parse quality, graph candidates, and relationship graphs support interpretation after the user can inspect accounts.
+  - Diagnostics should remain available after the primary result workflow without interrupting the first account-list interaction.
 
 ## Design principles
 - Principle 1: **Evidence before decoration.** Counts, source files, status labels, and errors are the visual anchors. Decorative surfaces must never compete with diagnostics.
