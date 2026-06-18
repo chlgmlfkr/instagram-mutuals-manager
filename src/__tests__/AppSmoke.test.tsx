@@ -114,9 +114,12 @@ describe('App smoke flow', () => {
       privacyButton.dispatchEvent(new MouseEvent('click', { bubbles: true }));
     });
 
-    expect(container.textContent).toContain('개인정보는 어떻게 처리되나요?');
-    expect(container.textContent).toContain('광고를 도입하더라도 파일 내용과 분석 결과를 광고 코드에 넘기지 않는 구조');
-    expect(container.querySelector('a[href="/privacy.html"]')).not.toBeNull();
+    expect(container.textContent).toContain('ISeeSocial 개인정보 안내');
+    expect(container.textContent).toContain('결과 목록을 광고 코드나 통계 도구에 넘기지 않는 구조');
+    expect(container.textContent).toContain('수집하지 않는 정보');
+    expect(container.textContent).toContain('브라우저에서 처리되는 정보');
+    expect(container.textContent).toContain('마지막 업데이트: 2026년 6월 11일');
+    expect(container.querySelector('a[href="/privacy.html"]')).toBeNull();
   });
 
   it('rejects a folder without JSON files without enabling analysis', () => {
