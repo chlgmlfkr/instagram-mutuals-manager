@@ -206,10 +206,10 @@ function AnalyzeProgress({ progress, currentStep }: { progress: number; currentS
 function AdRail({ side }: { side: 'left' | 'right' }) {
   return (
     <aside
-      className="hidden xl:block"
+      className={`hidden xl:block ${side === 'left' ? 'justify-self-start' : 'justify-self-end'}`}
       aria-label={`${side === 'left' ? '왼쪽' : '오른쪽'} 광고 예정 영역`}
     >
-      <div className="sticky top-24 flex min-h-[520px] items-center justify-center rounded-2xl border border-dashed border-slate-300 bg-white/55 p-4 text-center text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">
+      <div className="sticky top-24 flex min-h-[520px] w-full items-center justify-center rounded-2xl border border-dashed border-slate-300 bg-white/55 p-4 text-center text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">
         <span>
           AD
           <br />
@@ -222,7 +222,7 @@ function AdRail({ side }: { side: 'left' | 'right' }) {
 
 function PageWithAdRails({ children, maxWidth = 'max-w-5xl' }: { children: ReactNode; maxWidth?: string }) {
   return (
-    <div className="mx-auto grid w-full max-w-[1500px] grid-cols-1 gap-6 px-5 py-10 sm:px-8 xl:grid-cols-[160px_minmax(0,1fr)_160px]">
+    <div className="grid w-full grid-cols-1 gap-6 px-5 py-10 sm:px-8 xl:grid-cols-[128px_minmax(0,1fr)_128px] 2xl:grid-cols-[180px_minmax(0,1fr)_180px]">
       <AdRail side="left" />
       <div className={`mx-auto w-full ${maxWidth}`}>{children}</div>
       <AdRail side="right" />
