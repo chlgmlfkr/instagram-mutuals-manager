@@ -223,6 +223,9 @@ describe('App smoke flow', () => {
     expect(container.textContent).toContain('현재 분석 파일');
     expect(container.textContent).toContain('언팔로워 후보');
     expect(container.textContent).toContain('맞팔');
+    expect(container.textContent).toContain('시각화 후보');
+    expect(container.textContent).toContain('언팔로워 위험 비율');
+    expect(container.textContent).toContain('데이터 신뢰도');
     expect(container.textContent).toContain('팔로우 관계 비율');
     expect(container.textContent).toContain('계정 목록');
     expect(container.textContent).toContain('@bob');

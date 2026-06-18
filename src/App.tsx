@@ -111,6 +111,83 @@ function BarRow({
   );
 }
 
+function GraphCandidateCards({ results, stats }: { results: AnalysisResults; stats: ParsedStats }) {
+  const followingTotal = Math.max(results.following.length, 1);
+  const relationshipTotal = Math.max(
+    results.unfollowers.length + results.mutuals.length + results.fans.length,
+    1
+  );
+  const unfollowerPercent = Number(ratio(results.unfollowers.length, followingTotal));
+  const mutualPercent = Number(ratio(results.mutuals.length, followingTotal));
+  const fanPercent = Number(ratio(results.fans.length, relationshipTotal));
+  const dataTrust = Math.max(0, 100 - Math.min(stats.skipCount * 4, 100));
+
+  return (
+    <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+      <div className="flex flex-wrap items-end justify-between gap-3">
+        <div>
+          <p className="text-sm font-semibold text-slate-950">시각화 후보</p>
+          <p className="mt-1 text-sm text-slate-500">
+            현재 데이터로 바로 만들었을 때 가장 읽히는 그래프 후보입니다.
+          </p>
+        </div>
+        <span className="rounded-full border border-blue-100 bg-blue-50 px-3 py-1.5 text-xs font-semibold text-blue-700">
+          추천 순서
+        </span>
+      </div>
+
+      <div className="mt-5 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+        <div className="rounded-xl border border-rose-100 bg-rose-50/60 p-4">
+          <div className="flex items-center justify-between gap-4">
+            <div>
+              <p className="text-sm font-semibold text-slate-950">언팔로워 위험 비율</p>
+              <p className="mt-1 text-xs leading-5 text-slate-500">가장 먼저 보여줄 링/게이지</p>
+            </div>
+            <div
+              className="grid h-16 w-16 shrink-0 place-items-center rounded-full text-sm font-bold text-[#e1306c]"
+              style={{
+                background: `conic-gradient(#e1306c ${unfollowerPercent * 3.6}deg, #ffe4ec 0deg)`
+              }}
+            >
+              <div className="grid h-11 w-11 place-items-center rounded-full bg-white">
+                {unfollowerPercent.toFixed(0)}%
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+          <p className="text-sm font-semibold text-slate-950">관계 구성 막대</p>
+          <p className="mt-1 text-xs leading-5 text-slate-500">언팔/맞팔/나를 팔로우함을 한 줄로 비교</p>
+          <div className="mt-4 flex h-3 overflow-hidden rounded-full bg-white">
+            <div className="bg-[#e1306c]" style={{ width: `${ratio(results.unfollowers.length, relationshipTotal)}%` }} />
+            <div className="bg-emerald-500" style={{ width: `${ratio(results.mutuals.length, relationshipTotal)}%` }} />
+            <div className="bg-amber-500" style={{ width: `${fanPercent}%` }} />
+          </div>
+        </div>
+
+        <div className="rounded-xl border border-emerald-100 bg-emerald-50/70 p-4">
+          <p className="text-sm font-semibold text-slate-950">맞팔 안정도</p>
+          <p className="mt-1 text-xs leading-5 text-slate-500">내 팔로잉 중 서로 이어진 비율</p>
+          <div className="mt-4 h-3 overflow-hidden rounded-full bg-white">
+            <div className="h-full rounded-full bg-emerald-500" style={{ width: `${mutualPercent}%` }} />
+          </div>
+          <p className="mt-2 text-xs font-semibold text-emerald-700">{mutualPercent.toFixed(1)}%</p>
+        </div>
+
+        <div className="rounded-xl border border-blue-100 bg-blue-50/70 p-4">
+          <p className="text-sm font-semibold text-slate-950">데이터 신뢰도</p>
+          <p className="mt-1 text-xs leading-5 text-slate-500">읽지 못한 항목이 적을수록 신뢰도 높음</p>
+          <div className="mt-4 h-3 overflow-hidden rounded-full bg-white">
+            <div className="h-full rounded-full bg-blue-500" style={{ width: `${dataTrust}%` }} />
+          </div>
+          <p className="mt-2 text-xs font-semibold text-blue-700">{dataTrust}%</p>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function GraphSection({ results, stats }: { results: AnalysisResults; stats: ParsedStats }) {
   const relationshipTotal = Math.max(
     new Set([...results.following, ...results.followers, ...results.blocked, ...results.restricted]).size,
@@ -220,9 +297,17 @@ function AdRail({ side }: { side: 'left' | 'right' }) {
   );
 }
 
-function PageWithAdRails({ children, maxWidth = 'max-w-5xl' }: { children: ReactNode; maxWidth?: string }) {
+function PageWithAdRails({
+  children,
+  maxWidth = 'max-w-5xl',
+  yClass = 'py-10'
+}: {
+  children: ReactNode;
+  maxWidth?: string;
+  yClass?: string;
+}) {
   return (
-    <div className="grid w-full grid-cols-1 gap-6 px-5 py-10 sm:px-8 xl:grid-cols-[128px_minmax(0,1fr)_128px] 2xl:grid-cols-[180px_minmax(0,1fr)_180px]">
+    <div className={`grid w-full grid-cols-1 gap-6 px-5 ${yClass} sm:px-8 xl:grid-cols-[128px_minmax(0,1fr)_128px] 2xl:grid-cols-[180px_minmax(0,1fr)_180px]`}>
       <AdRail side="left" />
       <div className={`mx-auto w-full ${maxWidth}`}>{children}</div>
       <AdRail side="right" />
@@ -542,7 +627,7 @@ export default function App() {
         )}
 
         {viewState === 'success' && (
-          <PageWithAdRails maxWidth="max-w-6xl">
+          <PageWithAdRails maxWidth="max-w-6xl" yClass="pt-4 pb-10 sm:pt-5 sm:pb-10">
           <section className="state-turn flex w-full flex-col gap-5">
             <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
               <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
@@ -581,6 +666,7 @@ export default function App() {
               비공개 계정·삭제된 계정·데이터 누락에 따라 일부 차이가 생길 수 있습니다.
             </div>
 
+            <GraphCandidateCards results={results} stats={stats} />
             <GraphSection results={results} stats={stats} />
             <ResultsTabs
               following={results.following}
