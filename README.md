@@ -302,7 +302,13 @@ npx wrangler whoami
 npm run deploy:cf
 ```
 
-현재 로컬 확인 결과 `wrangler`는 인증되어 있지 않습니다. 실제 배포 전 한 번만 `wrangler login` 또는 `CLOUDFLARE_API_TOKEN` 설정이 필요합니다.
+현재 로컬 확인 결과 `wrangler` 인증은 완료됐습니다. Cloudflare 계정이 2개라 배포 시 1번 계정 ID를 명시합니다.
+
+```bash
+CLOUDFLARE_ACCOUNT_ID=8bc24d7f2dbb3ab7e926ff766cb81898 npm run deploy:cf
+```
+
+배포는 UI와 사이트 전체 피드백을 먼저 반영한 뒤 진행합니다.
 
 ### Cloudflare Pages Git 연동 배포
 Cloudflare Pages에서 GitHub 저장소를 연결하고 아래 값으로 설정합니다.

@@ -8,10 +8,8 @@ export default function PrivacyNotice({ variant = 'full' }: PrivacyNoticeProps) 
       <section className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <div className="min-w-0">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-400">
-              Privacy Boundary
-            </p>
-            <h2 className="mt-1 text-lg font-semibold text-slate-950">개인정보와 광고 경계</h2>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-400">Privacy</p>
+            <h2 className="mt-1 text-lg font-semibold text-slate-950">개인정보는 어떻게 처리되나요?</h2>
             <p className="mt-1 max-w-3xl text-sm leading-6 text-slate-500">
               원본 ZIP, 파일명, 사용자명, 결과 목록은 서버로 전송하지 않습니다. 광고를 붙이더라도 분석
               데이터와 분리합니다.
@@ -42,10 +40,8 @@ export default function PrivacyNotice({ variant = 'full' }: PrivacyNoticeProps) 
   return (
     <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
       <div className="flex flex-col gap-2">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-400">
-          Privacy Boundary
-        </p>
-        <h2 className="text-xl font-semibold text-slate-950">개인정보와 광고 경계</h2>
+        <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-400">Privacy</p>
+        <h2 className="text-xl font-semibold text-slate-950">개인정보는 어떻게 처리되나요?</h2>
         <p className="max-w-3xl text-sm leading-6 text-slate-500">
           ISeeSocial은 사용자가 직접 받은 Instagram 내보내기 파일을 브라우저에서만 분석합니다.
           광고를 도입하더라도 파일 내용과 분석 결과를 광고 코드에 넘기지 않는 구조를 유지합니다.

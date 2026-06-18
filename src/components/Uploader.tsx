@@ -11,6 +11,7 @@ type UploaderProps = {
   disabled?: boolean;
   framed?: boolean;
   onGuideClick?: () => void;
+  showAnalyzePanel?: boolean;
 };
 
 export default function Uploader({
@@ -22,7 +23,8 @@ export default function Uploader({
   onAnalyze,
   disabled,
   framed = true,
-  onGuideClick
+  onGuideClick,
+  showAnalyzePanel = true
 }: UploaderProps) {
   const [isDragging, setIsDragging] = useState(false);
   const hasInput = zipFile !== null || folderFiles.length > 0;
@@ -57,7 +59,7 @@ export default function Uploader({
           <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-400">
             Export File
           </p>
-          <h2 className="mt-2 text-xl font-semibold text-slate-950">Instagram ZIP 선택</h2>
+          <h2 className="mt-2 text-xl font-semibold text-slate-950">Instagram 내보내기 ZIP 선택</h2>
           <p className="mt-1 text-sm leading-6 text-slate-500">
             ZIP을 먼저 권장합니다. 압축 해제 폴더도 보조로 분석할 수 있습니다.
           </p>
@@ -90,7 +92,7 @@ export default function Uploader({
               추천
             </span>
           </div>
-          <p className="text-lg font-semibold text-slate-950">내보내기 ZIP 업로드</p>
+          <p className="text-lg font-semibold text-slate-950">다운로드한 ZIP 그대로 업로드</p>
           <p className="text-sm leading-6 text-slate-500">
             다운로드한 Instagram 내보내기 ZIP을 그대로 넣을 수 있습니다.
           </p>
@@ -134,27 +136,29 @@ export default function Uploader({
         </span>
       </div>
 
-      <div className="mt-5 rounded-xl border border-slate-200 bg-slate-50 p-4 text-center">
-        <div className="mx-auto max-w-sm text-sm leading-6 text-slate-600">
-          {hasInput
-            ? '파일 선택 완료. 아래 버튼을 누르면 분석이 시작됩니다.'
-            : '먼저 ZIP 또는 폴더를 선택하면 분석 버튼이 활성화됩니다.'}
+      {showAnalyzePanel && (
+        <div className="mt-5 rounded-xl border border-slate-200 bg-slate-50 p-4 text-center">
+          <div className="mx-auto max-w-sm text-sm leading-6 text-slate-600">
+            {hasInput
+              ? 'ZIP 선택 완료. 분석을 시작하면 언팔로워 후보를 보여드립니다.'
+              : 'ZIP을 선택하면 분석을 시작할 수 있습니다.'}
+          </div>
+          <a
+            href="/privacy.html"
+            className="mt-3 inline-flex text-xs font-semibold text-blue-700 underline-offset-4 hover:underline"
+          >
+            개인정보 안내 보기
+          </a>
+          <button
+            type="button"
+            className="btn-brand mx-auto mt-4 min-h-14 w-full max-w-[280px] text-base"
+            onClick={onAnalyze}
+            disabled={!hasInput || disabled}
+          >
+            {disabled && hasInput ? '분석 중...' : '분석 시작'}
+          </button>
         </div>
-        <a
-          href="/privacy.html"
-          className="mt-3 inline-flex text-xs font-semibold text-blue-700 underline-offset-4 hover:underline"
-        >
-          개인정보 안내 보기
-        </a>
-        <button
-          type="button"
-          className="btn-brand mx-auto mt-4 min-h-14 w-full max-w-[280px] text-base"
-          onClick={onAnalyze}
-          disabled={!hasInput || disabled}
-        >
-          {disabled && hasInput ? '분석 중...' : '분석 시작'}
-        </button>
-      </div>
+      )}
 
       <details className="mt-4 rounded-xl border border-slate-200 bg-slate-50 p-4">
         <summary className="cursor-pointer list-none">

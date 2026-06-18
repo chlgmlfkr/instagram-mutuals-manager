@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useState } from 'react';
-import ExpandableAnalysis from './ExpandableAnalysis';
 import ListView from './ListView';
 
 type ResultsTabsProps = {
@@ -90,9 +89,7 @@ export default function ResultsTabs({
     <section className="flex min-h-0 flex-col gap-4 rounded-xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5">
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-400">
-            Relationship Ledger
-          </p>
+          <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-400">계정 목록</p>
           <h3 className="mt-2 text-2xl font-semibold text-slate-950">언팔로워 후보</h3>
           <p className="mt-1 text-sm text-slate-500">
             분류된 계정 목록은 언팔로워 후보를 먼저 보여주고, 다른 관계는 탭으로 전환합니다.
@@ -140,16 +137,6 @@ export default function ResultsTabs({
         accent={activeTab.accent}
         description={activeTab.description}
         emptyMessage="현재 export에서 이 분류에 표시할 사용자가 없습니다."
-      />
-
-      <ExpandableAnalysis
-        following={following}
-        followers={followers}
-        mutuals={mutuals}
-        unfollowers={unfollowers}
-        fans={fans}
-        blocked={blocked}
-        restricted={restricted}
       />
     </section>
   );
