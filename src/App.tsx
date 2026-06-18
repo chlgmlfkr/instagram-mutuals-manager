@@ -291,7 +291,11 @@ function AnalyzeProgress({ progress, currentStep }: { progress: number; currentS
             >
               <span
                 className={`flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold ${
-                  done ? 'bg-blue-600 text-white' : active ? 'bg-white text-blue-700 ring-1 ring-blue-200' : 'bg-white'
+                  done
+                    ? 'bg-blue-600 text-white progress-step-done'
+                    : active
+                      ? 'bg-white text-blue-700 ring-1 ring-blue-200 progress-step-active'
+                      : 'bg-white'
                 }`}
               >
                 {done ? '✓' : index + 1}
@@ -344,6 +348,12 @@ function resetViewportTop() {
   requestAnimationFrame(() => {
     document.documentElement.scrollTop = 0;
     document.body.scrollTop = 0;
+  });
+}
+
+function wait(ms: number) {
+  return new Promise((resolve) => {
+    window.setTimeout(resolve, ms);
   });
 }
 
@@ -469,25 +479,34 @@ export default function App() {
 
   const handleAnalyze = async () => {
     if (!hasInput || isBusy) return;
+    const advanceStep = async (step: number, progress: number, delay = 260) => {
+      setCurrentStep(step);
+      setAnalysisProgress(progress);
+      await wait(delay);
+    };
+
     resetAnalysis();
     setError(null);
     setStatus('loading');
     setViewState('analyzing');
-    setAnalysisProgress(12);
     setCurrentStep(0);
+    setAnalysisProgress(12);
 
     try {
-      setCurrentStep(1);
-      setAnalysisProgress(28);
+      await advanceStep(0, 12, 280);
+      await advanceStep(1, 28, 280);
       setStatus('parsing');
-      setCurrentStep(2);
-      setAnalysisProgress(48);
+      await advanceStep(2, 46, 280);
       const output = await analyzeInstagramExport(zipFile, folderFiles);
-      setCurrentStep(5);
+      await advanceStep(3, 62, 240);
+      await advanceStep(4, 80, 240);
+      await advanceStep(5, 96, 240);
+      setCurrentStep(6);
       setAnalysisProgress(100);
       setLastFileList(output.fileList);
       setStats(output.stats);
       setResults(output.results);
+      await wait(180);
       setStatus('done');
       setViewState('success');
     } catch (err) {
@@ -653,7 +672,7 @@ export default function App() {
 
         {viewState === 'success' && (
           <PageWithAdRails maxWidth="max-w-6xl" yClass="pt-4 pb-10 sm:pt-5 sm:pb-10">
-          <section className="state-turn flex w-full flex-col gap-5">
+          <section className="success-reveal flex w-full flex-col gap-5">
             <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
               <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
                 <div>

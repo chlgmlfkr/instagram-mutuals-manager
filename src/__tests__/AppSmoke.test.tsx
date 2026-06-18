@@ -26,6 +26,12 @@ function jsonFile(path: string, data: unknown) {
   return file;
 }
 
+function wait(ms: number) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
+}
+
 beforeEach(() => {
   container = document.createElement('div');
   document.body.appendChild(container);
@@ -218,6 +224,7 @@ describe('App smoke flow', () => {
 
     await act(async () => {
       analyzeButton.click();
+      await wait(1900);
     });
 
     expect(container.textContent).toContain('현재 분석 파일');
