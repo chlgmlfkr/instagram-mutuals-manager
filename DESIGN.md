@@ -34,6 +34,12 @@ Chosen direction: **Private Export Console**. The product should feel like a pri
   - Korean alias: `아시셜`.
   - Rationale: "I see social" matches the product promise of inspecting user-owned social export data locally.
   - Risk: `아시셜` can sound like `asocial` in English, so use `ISeeSocial` as the official mark and `아시셜` as a Korean reading.
+- Logo work:
+  - ISeeSocial needs a dedicated logo before public launch. The current `ISC` square is acceptable as a temporary product mark only.
+  - Primary direction: a restrained `IS` or `ISC` lettermark paired with the `ISeeSocial` wordmark.
+  - The logo should feel like a private data utility: neutral, compact, trustworthy, and not like an Instagram clone or growth-hacking service.
+  - Required deliverables: app header mark, favicon, Open Graph image lockup, dark/light safe variants, and a small monochrome fallback.
+  - Avoid Instagram gradient imitation, camera glyph copying, follower-bait symbols, and overly playful mascot-style branding.
 - Avoid:
   - Landing-page hero sections, marketing promises, influencer-growth language, vanity metrics, and dark cinematic SaaS drama.
   - Overly playful Instagram gradients as the main system. Warm accents are allowed, but relationship data must stay sober.
@@ -180,7 +186,7 @@ Chosen direction: **Private Export Console**. The product should feel like a pri
 - Imagery/iconography:
   - No stock imagery, influencer photos, or Instagram feed mockups.
   - Use simple functional icons when an icon library is introduced: upload, folder, shield, file, search, copy, download, alert, check.
-  - Lettermark should shift from `IM` to `IS` to match `ISeeSocial`; do not overbrand it.
+  - Lettermark should shift from the temporary `ISC` mark to a deliberate `IS`/`ISC` logo system that matches `ISeeSocial`; do not overbrand it.
 
 ## Components
 - Existing components to reuse:
@@ -294,6 +300,7 @@ Chosen direction: **Private Export Console**. The product should feel like a pri
   - Preserve AppSmoke and ListView behavioral tests when changing component structure.
 
 ## Open questions
+- [ ] What should the final ISeeSocial logo system be: `IS`, `ISC`, or full wordmark-first? Owner: product/design. Impact: favicon, header, OG image, and launch polish.
 - [ ] Should the current browser-window outer chrome remain a durable brand metaphor, or should future iterations flatten it into a stricter SaaS workspace? Owner: product/design. Impact: layout density and visual maturity.
 - [ ] Should the app self-host `Pretendard` or another Korean UI font, or keep the current no-extra-assets system stack? Owner: engineering/design. Impact: typography quality vs privacy/performance simplicity.
 - [ ] Should relationship category names expose short explanatory tooltips for first-time users? Owner: product. Impact: learnability vs dashboard density.
