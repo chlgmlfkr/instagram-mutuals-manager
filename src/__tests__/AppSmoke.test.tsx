@@ -242,6 +242,7 @@ describe('App smoke flow', () => {
     expect(container.textContent).not.toContain('신규/변동');
 
     const content = container.textContent ?? '';
+    const adPlaceholderCount = content.match(/광고 영역 예정/g)?.length ?? 0;
     const fileIndex = content.indexOf('현재 분석 파일');
     const unfollowerSummaryIndex = content.indexOf('전체 팔로잉');
     const listIndex = content.indexOf('계정 목록');
@@ -249,6 +250,7 @@ describe('App smoke flow', () => {
     const graphIndex = content.indexOf('팔로우 관계 비율');
     const diagnosticsIndex = content.indexOf('이번 분석에 사용한 파일');
 
+    expect(adPlaceholderCount).toBe(2);
     expect(fileIndex).toBeGreaterThanOrEqual(0);
     expect(unfollowerSummaryIndex).toBeGreaterThan(fileIndex);
     expect(listIndex).toBeGreaterThan(unfollowerSummaryIndex);

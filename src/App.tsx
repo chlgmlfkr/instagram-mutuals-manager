@@ -636,7 +636,7 @@ export default function App() {
 
     return (
       <main className="bg-[#f7f7f5]">
-        {(viewState !== 'idle' || hasInput || error) && (
+        {viewState !== 'success' && (viewState !== 'idle' || hasInput || error) && (
           <PageWithAdRails>
             {viewState === 'upload' && (
               <div key="upload" className="state-turn space-y-5">
