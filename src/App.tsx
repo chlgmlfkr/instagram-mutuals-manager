@@ -63,34 +63,34 @@ function ratio(value: number, total: number) {
   return ((value / total) * 100).toFixed(1);
 }
 
-function StatCard({
-  label,
-  value,
-  help,
-  tone = 'text-slate-950'
-}: {
-  label: string;
-  value: number;
-  help: string;
-  tone?: string;
-}) {
-  return (
-    <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-      <p className="text-sm font-medium text-slate-500">{label}</p>
-      <p className={`mt-3 text-4xl font-semibold tabular-nums ${tone}`}>{value.toLocaleString()}</p>
-      <p className="mt-3 text-xs leading-5 text-slate-500">{help}</p>
-    </div>
-  );
-}
-
-function UnfollowerSummaryCard({ results }: { results: AnalysisResults }) {
+function RelationshipSummaryCard({ results, stats }: { results: AnalysisResults; stats: ParsedStats }) {
   const unfollowerCount = results.unfollowers.length;
   const followingCount = results.following.length;
+  const supportingStats = [
+    {
+      label: '맞팔',
+      value: results.mutuals.length,
+      help: '서로 팔로우 중인 계정',
+      tone: 'text-slate-950'
+    },
+    {
+      label: '나를 팔로우함',
+      value: results.fans.length,
+      help: '상대는 나를 팔로우하지만 나는 팔로우하지 않음',
+      tone: 'text-slate-950'
+    },
+    {
+      label: '읽지 못한 항목',
+      value: stats.skipCount,
+      help: '파싱하지 못했거나 누락된 항목',
+      tone: stats.skipCount > 0 ? 'text-amber-600' : 'text-slate-950'
+    }
+  ];
 
   return (
     <section className="rounded-2xl border border-rose-100 bg-white p-5 shadow-sm">
-      <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
-        <div>
+      <div className="grid gap-4 xl:grid-cols-[1.15fr_2fr] xl:items-stretch">
+        <div className="rounded-xl border border-rose-100 bg-rose-50 p-5">
           <p className="text-sm font-semibold text-[#e1306c]">언팔로워 후보</p>
           <p className="mt-2 text-5xl font-semibold tabular-nums text-[#e1306c] sm:text-6xl">
             {unfollowerCount.toLocaleString()}
@@ -99,8 +99,16 @@ function UnfollowerSummaryCard({ results }: { results: AnalysisResults }) {
             전체 팔로잉 {followingCount.toLocaleString()}명 중 약 {ratio(unfollowerCount, followingCount)}%입니다.
           </p>
         </div>
-        <div className="rounded-xl border border-rose-100 bg-rose-50 px-4 py-3 text-sm leading-6 text-rose-700">
-          먼저 숫자로 규모를 확인한 뒤, 아래 목록에서 계정을 검색·선택·내보내기 할 수 있습니다.
+        <div className="grid gap-3 md:grid-cols-3">
+          {supportingStats.map((stat) => (
+            <div key={stat.label} className="rounded-xl border border-slate-200 bg-white p-5">
+              <p className="text-sm font-medium text-slate-500">{stat.label}</p>
+              <p className={`mt-3 text-4xl font-semibold tabular-nums ${stat.tone}`}>
+                {stat.value.toLocaleString()}
+              </p>
+              <p className="mt-3 text-xs leading-5 text-slate-500">{stat.help}</p>
+            </div>
+          ))}
         </div>
       </div>
     </section>
@@ -739,7 +747,7 @@ export default function App() {
               </div>
             </div>
 
-            <UnfollowerSummaryCard results={results} />
+            <RelationshipSummaryCard results={results} stats={stats} />
 
             <ResultsTabs
               following={results.following}
@@ -758,16 +766,6 @@ export default function App() {
 
             <GraphCandidateCards results={results} stats={stats} />
             <GraphSection results={results} stats={stats} />
-            <section className="grid gap-4 md:grid-cols-3">
-              <StatCard label="맞팔" value={results.mutuals.length} help="서로 팔로우 중인 계정" />
-              <StatCard label="나를 팔로우함" value={results.fans.length} help="상대는 나를 팔로우하지만 나는 팔로우하지 않음" />
-              <StatCard
-                label="읽지 못한 항목"
-                value={stats.skipCount}
-                tone={stats.skipCount > 0 ? 'text-amber-600' : 'text-slate-950'}
-                help="파싱하지 못했거나 누락된 항목"
-              />
-            </section>
             <UsedFilesPanel stats={stats} error={error} lastFileList={lastFileList} />
           </section>
           </SuccessPageShell>
