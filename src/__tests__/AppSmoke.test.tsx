@@ -82,6 +82,8 @@ describe('App smoke flow', () => {
     expect(container.textContent).toContain('내보내기 설정');
     expect(container.textContent).toContain('JSON (필수)');
     expect(container.textContent).toContain('인스타그램 내보내기 ZIP 받는 방법');
+    expect(container.textContent).toContain('광고 영역 예정');
+    expect(container.textContent).not.toContain('ISeeSocial 개인정보 안내');
     expect(container.querySelector('a[href="/instagram-export-guide.html"]')).not.toBeNull();
   });
 
@@ -96,7 +98,8 @@ describe('App smoke flow', () => {
     expect(container.textContent).toContain('Instagram 내보내기 ZIP 선택');
     expect(container.textContent).toContain('다운로드한 ZIP 그대로 업로드');
     expect(container.textContent).toContain('압축 해제 폴더 업로드');
-    expect(container.textContent).toContain('개인정보는 어떻게 처리되나요?');
+    expect(container.textContent).toContain('광고 영역 예정');
+    expect(container.textContent).not.toContain('개인정보는 어떻게 처리되나요?');
     expect(container.textContent).not.toContain('분석 시작');
   });
 
@@ -223,7 +226,8 @@ describe('App smoke flow', () => {
     expect(container.textContent).toContain('팔로우 관계 비율');
     expect(container.textContent).toContain('계정 목록');
     expect(container.textContent).toContain('@bob');
-    expect(container.textContent).toContain('개인정보는 어떻게 처리되나요?');
+    expect(container.textContent).toContain('광고 영역 예정');
+    expect(container.textContent).not.toContain('개인정보는 어떻게 처리되나요?');
     expect(container.textContent).not.toContain('관계 분석 보기');
     expect(container.textContent).not.toContain('신규/변동');
   });
