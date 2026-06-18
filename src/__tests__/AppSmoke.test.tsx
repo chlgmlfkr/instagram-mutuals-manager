@@ -57,6 +57,10 @@ describe('App smoke flow', () => {
     });
 
     expect(container.textContent).toContain('브라우저 로컬 분석');
+    expect(container.textContent).toContain('ISC');
+    expect(container.textContent).toContain('홈');
+    expect(container.textContent).toContain('분석화면');
+    expect(container.textContent).toContain('개인정보 안내');
     expect(container.textContent).toContain('인스타 언팔로워');
     expect(container.textContent).toContain('ZIP으로 확인 시작하기');
     expect(container.textContent).toContain('다운로드 방법 보기');
@@ -88,11 +92,31 @@ describe('App smoke flow', () => {
 
     openUploadFlow();
 
+    expect(container.querySelector('.page-turn')).not.toBeNull();
     expect(container.textContent).toContain('Instagram 내보내기 ZIP 선택');
     expect(container.textContent).toContain('다운로드한 ZIP 그대로 업로드');
     expect(container.textContent).toContain('압축 해제 폴더 업로드');
     expect(container.textContent).toContain('개인정보는 어떻게 처리되나요?');
     expect(container.textContent).not.toContain('분석 시작');
+  });
+
+  it('opens privacy as a first-class top navigation screen', () => {
+    act(() => {
+      root.render(<App />);
+    });
+
+    const privacyButton = Array.from(container.querySelectorAll('button')).find(
+      (button) => button.textContent === '개인정보 안내'
+    );
+    if (!privacyButton) throw new Error('Privacy tab button not found');
+
+    act(() => {
+      privacyButton.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    });
+
+    expect(container.textContent).toContain('개인정보는 어떻게 처리되나요?');
+    expect(container.textContent).toContain('광고를 도입하더라도 파일 내용과 분석 결과를 광고 코드에 넘기지 않는 구조');
+    expect(container.querySelector('a[href="/privacy.html"]')).not.toBeNull();
   });
 
   it('rejects a folder without JSON files without enabling analysis', () => {

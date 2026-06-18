@@ -1,5 +1,5 @@
-import { useMemo, useRef, useState } from 'react';
-import AppHeader from './components/AppHeader';
+import { useMemo, useState } from 'react';
+import AppHeader, { type MainTab } from './components/AppHeader';
 import DownloadGuide from './components/DownloadGuide';
 import PrivacyNotice from './components/PrivacyNotice';
 import ResultsTabs from './components/ResultsTabs';
@@ -204,7 +204,8 @@ function AnalyzeProgress({ progress, currentStep }: { progress: number; currentS
 }
 
 export default function App() {
-  const [activeMainTab, setActiveMainTab] = useState<'analyze' | 'guide'>('analyze');
+  const [activeMainTab, setActiveMainTab] = useState<MainTab>('home');
+  const [pageTurnKey, setPageTurnKey] = useState(0);
   const [viewState, setViewState] = useState<AppViewState>('idle');
   const [zipFile, setZipFile] = useState<File | null>(null);
   const [folderFiles, setFolderFiles] = useState<File[]>([]);
@@ -215,7 +216,6 @@ export default function App() {
   const [lastFileList, setLastFileList] = useState<string[]>([]);
   const [analysisProgress, setAnalysisProgress] = useState(0);
   const [currentStep, setCurrentStep] = useState(0);
-  const uploadRef = useRef<HTMLDivElement>(null);
 
   const folderFilesKey = folderFiles.map((file) => file.webkitRelativePath || file.name).join('|');
   const hasFolderInput = folderFiles.length > 0;
@@ -232,10 +232,18 @@ export default function App() {
     setCurrentStep(0);
   };
 
+  const switchMainTab = (tab: MainTab) => {
+    setActiveMainTab(tab);
+    if (tab === 'analyze' && viewState === 'idle') {
+      setViewState('upload');
+    }
+    setPageTurnKey((key) => key + 1);
+  };
+
   const openUpload = () => {
     setActiveMainTab('analyze');
     setViewState('upload');
-    requestAnimationFrame(() => uploadRef.current?.scrollIntoView?.({ behavior: 'smooth', block: 'start' }));
+    setPageTurnKey((key) => key + 1);
   };
 
   const resetToUpload = () => {
@@ -245,7 +253,6 @@ export default function App() {
     setStatus('idle');
     resetAnalysis();
     setViewState('upload');
-    requestAnimationFrame(() => uploadRef.current?.scrollIntoView?.({ behavior: 'smooth', block: 'start' }));
   };
 
   const handleZipChange = (file: File | null) => {
@@ -354,7 +361,18 @@ export default function App() {
       );
     }
 
-    return (
+    if (activeMainTab === 'privacy') {
+      return (
+        <main className="bg-slate-50 px-4 py-6 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-5xl">
+            <PrivacyNotice />
+          </div>
+        </main>
+      );
+    }
+
+    if (activeMainTab === 'home') {
+      return (
       <main className="bg-[#f7f7f5]">
         <section className="mx-auto grid min-h-[calc(100vh-73px)] w-full max-w-6xl items-center gap-10 px-5 py-12 sm:px-8 lg:grid-cols-[minmax(0,1fr)_360px] lg:py-16">
           <div className="max-w-3xl">
@@ -373,7 +391,7 @@ export default function App() {
               <button type="button" className="btn-brand min-h-14 px-6 text-base" onClick={openUpload}>
                 ZIP으로 확인 시작하기
               </button>
-              <button type="button" className="btn-outline min-h-14 px-6 text-base" onClick={() => setActiveMainTab('guide')}>
+              <button type="button" className="btn-outline min-h-14 px-6 text-base" onClick={() => switchMainTab('guide')}>
                 다운로드 방법 보기
               </button>
             </div>
@@ -390,9 +408,14 @@ export default function App() {
             </ul>
           </div>
         </section>
+      </main>
+      );
+    }
 
+    return (
+      <main className="bg-[#f7f7f5]">
         {(viewState !== 'idle' || hasInput || error) && (
-          <section ref={uploadRef} className="mx-auto w-full max-w-5xl px-5 py-10 sm:px-8">
+          <section className="mx-auto w-full max-w-5xl px-5 py-10 sm:px-8">
             {viewState === 'upload' && (
               <div className="space-y-5">
                 <div>
@@ -410,7 +433,7 @@ export default function App() {
                   onZipRejected={handleZipRejected}
                   onAnalyze={handleAnalyze}
                   disabled={isBusy}
-                  onGuideClick={() => setActiveMainTab('guide')}
+                  onGuideClick={() => switchMainTab('guide')}
                   showAnalyzePanel={false}
                 />
                 <PrivacyNotice variant="compact" />
@@ -441,7 +464,7 @@ export default function App() {
                   <button type="button" className="btn-outline" onClick={resetToUpload}>
                     다른 ZIP 선택
                   </button>
-                  <button type="button" className="btn-outline" onClick={() => setActiveMainTab('guide')}>
+                  <button type="button" className="btn-outline" onClick={() => switchMainTab('guide')}>
                     다운로드 방법 보기
                   </button>
                 </div>
@@ -461,7 +484,7 @@ export default function App() {
                   <button type="button" className="btn-brand" onClick={resetToUpload}>
                     다른 ZIP 선택
                   </button>
-                  <button type="button" className="btn-outline" onClick={() => setActiveMainTab('guide')}>
+                  <button type="button" className="btn-outline" onClick={() => switchMainTab('guide')}>
                     다운로드 방법 보기
                   </button>
                 </div>
@@ -533,8 +556,10 @@ export default function App() {
   return (
     <div className="min-h-screen bg-[#f7f7f5] text-slate-900">
       <div className="mx-auto min-h-screen w-full bg-[#f7f7f5]">
-        <AppHeader activeMainTab={activeMainTab} onTabChange={setActiveMainTab} />
-        {mainContent}
+        <AppHeader activeMainTab={activeMainTab} onTabChange={switchMainTab} />
+        <div key={pageTurnKey} className="page-turn">
+          {mainContent}
+        </div>
       </div>
     </div>
   );

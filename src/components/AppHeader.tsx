@@ -1,17 +1,24 @@
-type MainTab = 'analyze' | 'guide';
+export type MainTab = 'home' | 'analyze' | 'guide' | 'privacy';
 
 type AppHeaderProps = {
   activeMainTab: MainTab;
   onTabChange: (tab: MainTab) => void;
 };
 
+const tabs: Array<{ id: MainTab; label: string }> = [
+  { id: 'home', label: '홈' },
+  { id: 'analyze', label: '분석화면' },
+  { id: 'guide', label: '다운로드 가이드' },
+  { id: 'privacy', label: '개인정보 안내' }
+];
+
 export default function AppHeader({ activeMainTab, onTabChange }: AppHeaderProps) {
   return (
     <header className="sticky top-0 z-20 border-b border-slate-200 bg-white/95 px-4 py-3 backdrop-blur sm:px-6">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div className="flex min-w-0 items-center gap-3">
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-slate-900 text-sm font-bold text-white">
-            IS
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-slate-900 text-[13px] font-black text-white">
+            ISC
           </div>
           <div className="min-w-0">
             <h1 className="truncate text-lg font-semibold text-slate-950 sm:text-xl">
@@ -27,30 +34,21 @@ export default function AppHeader({ activeMainTab, onTabChange }: AppHeaderProps
           <span className="hidden rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1.5 text-xs font-semibold text-emerald-700 sm:inline-flex">
             서버 미전송
           </span>
-          <button
-            type="button"
-            aria-pressed={activeMainTab === 'analyze'}
-            className={`rounded-full px-4 py-2 text-sm font-semibold transition ${
-              activeMainTab === 'analyze'
-                ? 'bg-[#2563eb] text-white'
-                : 'border border-slate-200 bg-white text-slate-500 hover:text-slate-800'
-            }`}
-            onClick={() => onTabChange('analyze')}
-          >
-            분석 화면
-          </button>
-          <button
-            type="button"
-            aria-pressed={activeMainTab === 'guide'}
-            className={`rounded-full px-4 py-2 text-sm font-semibold transition ${
-              activeMainTab === 'guide'
-                ? 'bg-[#2563eb] text-white'
-                : 'border border-slate-200 bg-white text-slate-500 hover:text-slate-800'
-            }`}
-            onClick={() => onTabChange('guide')}
-          >
-            다운로드 가이드
-          </button>
+          {tabs.map((tab) => (
+            <button
+              key={tab.id}
+              type="button"
+              aria-pressed={activeMainTab === tab.id}
+              className={`rounded-full px-4 py-2 text-sm font-semibold transition ${
+                activeMainTab === tab.id
+                  ? 'bg-[#2563eb] text-white'
+                  : 'border border-slate-200 bg-white text-slate-500 hover:text-slate-800'
+              }`}
+              onClick={() => onTabChange(tab.id)}
+            >
+              {tab.label}
+            </button>
+          ))}
         </div>
       </div>
     </header>
