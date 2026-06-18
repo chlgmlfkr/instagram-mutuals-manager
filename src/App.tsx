@@ -1,4 +1,4 @@
-import { type ReactNode, useMemo, useState } from 'react';
+import { type ReactNode, useEffect, useMemo, useState } from 'react';
 import AppHeader, { type MainTab } from './components/AppHeader';
 import DownloadGuide from './components/DownloadGuide';
 import PrivacyNotice from './components/PrivacyNotice';
@@ -169,7 +169,7 @@ function AnalyzeProgress({ progress, currentStep }: { progress: number; currentS
           <h2 className="mt-2 text-3xl font-semibold text-slate-950">ZIP을 분석하는 중입니다.</h2>
           <p className="mt-3 text-sm leading-6 text-slate-500">파일은 서버로 전송되지 않습니다.</p>
         </div>
-        <div className="h-12 w-12 animate-pulse rounded-full border-4 border-blue-100 border-t-blue-600" />
+        <div className="h-12 w-12 animate-spin rounded-full border-4 border-blue-100 border-t-blue-600" />
       </div>
       <div className="mt-6 h-3 overflow-hidden rounded-full bg-slate-100">
         <div className="h-full rounded-full bg-[#2563eb] transition-all duration-500" style={{ width: `${progress}%` }} />
@@ -230,6 +230,13 @@ function PageWithAdRails({ children, maxWidth = 'max-w-5xl' }: { children: React
   );
 }
 
+function resetViewportTop() {
+  requestAnimationFrame(() => {
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+  });
+}
+
 export default function App() {
   const [activeMainTab, setActiveMainTab] = useState<MainTab>('home');
   const [pageTurnKey, setPageTurnKey] = useState(0);
@@ -250,6 +257,12 @@ export default function App() {
   const isBusy = status === 'loading' || status === 'parsing';
   const sourceLabel = useMemo(() => selectedSourceLabel(zipFile, folderFiles), [zipFile, folderFilesKey]);
   const sourceSize = useMemo(() => selectedSourceSize(zipFile, folderFiles), [zipFile, folderFilesKey]);
+
+  useEffect(() => {
+    if (activeMainTab === 'analyze' && ['fileSelected', 'analyzing', 'success', 'error'].includes(viewState)) {
+      resetViewportTop();
+    }
+  }, [activeMainTab, viewState]);
 
   const resetAnalysis = () => {
     setResults(EMPTY_RESULTS);
@@ -446,7 +459,7 @@ export default function App() {
         {(viewState !== 'idle' || hasInput || error) && (
           <PageWithAdRails>
             {viewState === 'upload' && (
-              <div className="space-y-5">
+              <div key="upload" className="state-turn space-y-5">
                 <div>
                   <p className="text-sm font-semibold text-blue-700">ZIP 업로드</p>
                   <h2 className="mt-2 text-3xl font-semibold text-slate-950">Instagram 내보내기 ZIP 선택</h2>
@@ -469,7 +482,7 @@ export default function App() {
             )}
 
             {viewState === 'fileSelected' && (
-              <section className="mx-auto max-w-3xl rounded-2xl border border-slate-200 bg-white p-6 text-center shadow-sm sm:p-8">
+              <section key="fileSelected" className="state-turn mx-auto max-w-3xl rounded-2xl border border-slate-200 bg-white p-6 text-center shadow-sm sm:p-8">
                 <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-emerald-50 text-2xl text-emerald-700">
                   ✓
                 </div>
@@ -499,10 +512,14 @@ export default function App() {
               </section>
             )}
 
-            {viewState === 'analyzing' && <AnalyzeProgress progress={analysisProgress} currentStep={currentStep} />}
+            {viewState === 'analyzing' && (
+              <div key="analyzing" className="state-turn">
+                <AnalyzeProgress progress={analysisProgress} currentStep={currentStep} />
+              </div>
+            )}
 
             {viewState === 'error' && (
-              <section className="mx-auto max-w-3xl rounded-2xl border border-rose-200 bg-white p-6 shadow-sm sm:p-8">
+              <section key="error" className="state-turn mx-auto max-w-3xl rounded-2xl border border-rose-200 bg-white p-6 shadow-sm sm:p-8">
                 <p className="text-sm font-semibold text-rose-600">분석할 수 없습니다</p>
                 <h2 className="mt-2 text-3xl font-semibold text-slate-950">파일을 다시 확인해 주세요.</h2>
                 <p className="mt-4 rounded-xl bg-rose-50 p-4 text-sm leading-6 text-rose-700">
@@ -526,7 +543,7 @@ export default function App() {
 
         {viewState === 'success' && (
           <PageWithAdRails maxWidth="max-w-6xl">
-          <section className="flex w-full flex-col gap-5">
+          <section className="state-turn flex w-full flex-col gap-5">
             <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
               <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
                 <div>

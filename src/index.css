@@ -63,6 +63,11 @@ a {
   will-change: transform, opacity, filter;
 }
 
+.state-turn {
+  animation: state-turn-in 520ms cubic-bezier(0.18, 0.88, 0.2, 1);
+  will-change: transform, opacity, filter;
+}
+
 @keyframes page-turn-in {
   0% {
     opacity: 0;
@@ -81,8 +86,27 @@ a {
   }
 }
 
+@keyframes state-turn-in {
+  0% {
+    opacity: 0;
+    filter: blur(1.5px);
+    transform: translateY(18px) scale(0.985);
+  }
+  62% {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(-3px) scale(1.002);
+  }
+  100% {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(0) scale(1);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .page-turn {
+  .page-turn,
+  .state-turn {
     animation: none;
   }
 }

@@ -31,9 +31,6 @@ export default function AppHeader({ activeMainTab, onTabChange }: AppHeaderProps
         </div>
 
         <div className="flex flex-wrap items-center gap-2" aria-label="주요 화면">
-          <span className="hidden rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1.5 text-xs font-semibold text-emerald-700 sm:inline-flex">
-            서버 미전송
-          </span>
           {tabs.map((tab) => (
             <button
               key={tab.id}
