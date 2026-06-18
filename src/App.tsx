@@ -121,6 +121,7 @@ function GraphCandidateCards({ results, stats }: { results: AnalysisResults; sta
   const mutualPercent = Number(ratio(results.mutuals.length, followingTotal));
   const fanPercent = Number(ratio(results.fans.length, relationshipTotal));
   const dataTrust = Math.max(0, 100 - Math.min(stats.skipCount * 4, 100));
+  const candidateRankClass = 'inline-flex h-7 w-7 items-center justify-center rounded-full text-xs font-black text-white';
 
   return (
     <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
@@ -140,7 +141,10 @@ function GraphCandidateCards({ results, stats }: { results: AnalysisResults; sta
         <div className="rounded-xl border border-rose-100 bg-rose-50/60 p-4">
           <div className="flex items-center justify-between gap-4">
             <div>
-              <p className="text-sm font-semibold text-slate-950">언팔로워 위험 비율</p>
+              <div className="flex items-center gap-2">
+                <span className={`${candidateRankClass} bg-[#e1306c]`}>1</span>
+                <p className="text-sm font-semibold text-slate-950">언팔로워 위험 비율</p>
+              </div>
               <p className="mt-1 text-xs leading-5 text-slate-500">가장 먼저 보여줄 링/게이지</p>
             </div>
             <div
@@ -154,34 +158,55 @@ function GraphCandidateCards({ results, stats }: { results: AnalysisResults; sta
               </div>
             </div>
           </div>
+          <div className="mt-4 h-2 overflow-hidden rounded-full bg-white">
+            <div className="h-full rounded-full bg-[#e1306c]" style={{ width: '25%' }} />
+          </div>
         </div>
 
         <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
-          <p className="text-sm font-semibold text-slate-950">관계 구성 막대</p>
+          <div className="flex items-center gap-2">
+            <span className={`${candidateRankClass} bg-amber-500`}>2</span>
+            <p className="text-sm font-semibold text-slate-950">관계 구성 막대</p>
+          </div>
           <p className="mt-1 text-xs leading-5 text-slate-500">언팔/맞팔/나를 팔로우함을 한 줄로 비교</p>
           <div className="mt-4 flex h-3 overflow-hidden rounded-full bg-white">
             <div className="bg-[#e1306c]" style={{ width: `${ratio(results.unfollowers.length, relationshipTotal)}%` }} />
             <div className="bg-emerald-500" style={{ width: `${ratio(results.mutuals.length, relationshipTotal)}%` }} />
             <div className="bg-amber-500" style={{ width: `${fanPercent}%` }} />
           </div>
+          <div className="mt-4 h-2 overflow-hidden rounded-full bg-white">
+            <div className="h-full rounded-full bg-amber-500" style={{ width: '50%' }} />
+          </div>
         </div>
 
         <div className="rounded-xl border border-emerald-100 bg-emerald-50/70 p-4">
-          <p className="text-sm font-semibold text-slate-950">맞팔 안정도</p>
+          <div className="flex items-center gap-2">
+            <span className={`${candidateRankClass} bg-emerald-500`}>3</span>
+            <p className="text-sm font-semibold text-slate-950">맞팔 안정도</p>
+          </div>
           <p className="mt-1 text-xs leading-5 text-slate-500">내 팔로잉 중 서로 이어진 비율</p>
           <div className="mt-4 h-3 overflow-hidden rounded-full bg-white">
             <div className="h-full rounded-full bg-emerald-500" style={{ width: `${mutualPercent}%` }} />
           </div>
           <p className="mt-2 text-xs font-semibold text-emerald-700">{mutualPercent.toFixed(1)}%</p>
+          <div className="mt-4 h-2 overflow-hidden rounded-full bg-white">
+            <div className="h-full rounded-full bg-emerald-500" style={{ width: '75%' }} />
+          </div>
         </div>
 
         <div className="rounded-xl border border-blue-100 bg-blue-50/70 p-4">
-          <p className="text-sm font-semibold text-slate-950">데이터 신뢰도</p>
+          <div className="flex items-center gap-2">
+            <span className={`${candidateRankClass} bg-blue-500`}>4</span>
+            <p className="text-sm font-semibold text-slate-950">데이터 신뢰도</p>
+          </div>
           <p className="mt-1 text-xs leading-5 text-slate-500">읽지 못한 항목이 적을수록 신뢰도 높음</p>
           <div className="mt-4 h-3 overflow-hidden rounded-full bg-white">
             <div className="h-full rounded-full bg-blue-500" style={{ width: `${dataTrust}%` }} />
           </div>
           <p className="mt-2 text-xs font-semibold text-blue-700">{dataTrust}%</p>
+          <div className="mt-4 h-2 overflow-hidden rounded-full bg-white">
+            <div className="h-full rounded-full bg-blue-500" style={{ width: '100%' }} />
+          </div>
         </div>
       </div>
     </section>
